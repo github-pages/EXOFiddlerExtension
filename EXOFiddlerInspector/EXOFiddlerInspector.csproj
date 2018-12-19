@@ -91,6 +91,13 @@
     </Compile>
     <Compile Include="Services\TelemetryService.cs" />
     <Compile Include="SessionRuleSet.cs" />
+    <Compile Include="TabPageUI.cs" />
+    <Compile Include="TabPageUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TabPageUserControl.Designer.cs">
+      <DependentUpon>TabPageUserControl.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -105,6 +112,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Office365AuthUserControl.resx">
       <DependentUpon>Office365AuthUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TabPageUserControl.resx">
+      <DependentUpon>TabPageUserControl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

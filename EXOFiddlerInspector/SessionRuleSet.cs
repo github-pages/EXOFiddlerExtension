@@ -27,6 +27,12 @@ namespace EXOFiddlerInspector
         private int HTTP200FreeBusy;
         private int FalsePositive;
 
+        public string UserIdentity;
+
+        private Boolean UserIdentitySet = false;
+        private Boolean AnchorMailboxSet = false;
+        private Boolean RedirectAddressSet = false;
+
         public Boolean bExtensionEnabled = FiddlerApplication.Prefs.GetBoolPref("extensions.EXOFiddlerExtension.enabled", false);
         public Boolean bElapsedTimeColumnEnabled = FiddlerApplication.Prefs.GetBoolPref("extensions.EXOFiddlerExtension.ElapsedTimeColumnEnabled", false);
         public Boolean bResponseServerColumnEnabled = FiddlerApplication.Prefs.GetBoolPref("extensions.EXOFiddlerExtension.ResponseServerColumnEnabled", false);
@@ -36,6 +42,7 @@ namespace EXOFiddlerInspector
         public Boolean bAppLoggingEnabled = FiddlerApplication.Prefs.GetBoolPref("extensions.EXOFiddlerExtension.AppLoggingEnabled", false);
         public Boolean bHighlightOutlookOWAOnlyEnabled = FiddlerApplication.Prefs.GetBoolPref("extensions.EXOFiddlerExtension.HighlightOutlookOWAOnlyEnabled", false);
         public int iExecutionCount = FiddlerApplication.Prefs.GetInt32Pref("extensions.EXOFiddlerExtension.ExecutionCount", 0);
+
 
         public void AutoTamperRequestAfter(Session oSession)
         {
@@ -116,6 +123,49 @@ namespace EXOFiddlerInspector
             int wordCountException = 0;
 
             #region ColouriseSessionsSwitchStatement
+
+            // Set Fiddler Application Preferences to drive data in EXO Summary Tab Page.
+
+            // X-User-Identity
+
+            if (!(string.IsNullOrEmpty(this.session.oRequest["X-User-Identity"]))) {
+                if (UserIdentitySet == false)
+                {
+                    //FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.UserIdentity", this.session.oRequest["X-User-Identity"]);
+                    UserIdentity = this.session.oRequest["X-User-Identity"];
+                    UserIdentitySet = true;
+                }              
+            }
+            
+            if (this.session.id == FiddlerApplication.UI.lvSessions.TotalItemCount() && UserIdentitySet == false)
+            {
+                FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.UserIdentity", "Not Found");
+            }
+
+            // X-Anchor-Mailbox
+
+            if (!(string.IsNullOrEmpty(this.session.oRequest["X-Anchor-Mailbox"])))
+            {
+                if (AnchorMailboxSet == false)
+                {
+                    FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.AnchorMailbox", this.session.oRequest["X-Anchor-Mailbox"]);
+                    AnchorMailboxSet = true;
+                }
+            }
+
+            if (this.session.id == FiddlerApplication.UI.lvSessions.TotalItemCount() && AnchorMailboxSet == false)
+            {
+                FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.AnchorMailbox", "Not Found");
+            }
+
+            // RedirectAddress
+            // -- If we have the application preference set from a previous Fiddler session, detect it here and clear out the value.
+            if (this.session.id == FiddlerApplication.UI.lvSessions.TotalItemCount() && RedirectAddressSet == false)
+            {
+                FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.RedirectAddress", "Not Found");
+            }
+
+
             /////////////////////////////
             //
             //  Broader code logic for sessions, where the response code cannot be used as in the switch statement.
@@ -230,6 +280,7 @@ namespace EXOFiddlerInspector
                                 if (calledDeveloperList.Any(Environment.UserName.Contains) && DeveloperDemoModeBreakScenarios == true)
                                 {
                                     RedirectAddress = "user@contoso.com";
+
                                 }
                                 else
                                 {
@@ -257,6 +308,17 @@ namespace EXOFiddlerInspector
                                     Environment.NewLine +
                                     "This is what we want to see, the mail.onmicrosoft.com redirect address (you may know this as the target address or remote " +
                                     "routing address) from On-Premise sends Outlook to Office 365.";
+
+                                // Setting this application preference here for use on EXO summary tab page.
+                                if (!(string.IsNullOrEmpty(RedirectAddress))) {
+                                    FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.RedirectAddress", RedirectAddress);
+                                    RedirectAddressSet = true;
+                                }
+                                
+                                if (this.session.id == FiddlerApplication.UI.lvSessions.TotalItemCount() && RedirectAddressSet == false)
+                                {
+                                    FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.RedirectAddress", "Not Found");
+                                }
 
                                 HTTP200SkipLogic++;
 
