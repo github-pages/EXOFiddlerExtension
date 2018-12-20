@@ -155,7 +155,7 @@ namespace EXOFiddlerInspector
 
         internal void SetTransmitTimeTextbox(string txt)
         {
-            TransmitTimeTextbox.Text = txt;
+            ServerDoneResponseTransmitTimeTextbox.Text = txt;
         }
 
         // Code to write to ResponseAlertTextBox.Text value.
@@ -222,6 +222,32 @@ namespace EXOFiddlerInspector
         internal void SetXHostIPTextBoxText(string txt)
         {
             XHostIPTextbox.Text = txt;
+        }
+
+        internal void SetClientBeginResponseDateTextBoxText(string txt)
+        {
+            ClientBeginResponseDateTextBox.Text = txt;
+        }
+
+        internal void SetClientBeginResponseTimeTextBoxText(string txt)
+        {
+            ClientBeginResponseTimeTextBox.Text = txt;
+        }
+
+
+        internal void SetClientDoneResponseDateTextBoxText(string txt)
+        {
+            ClientDoneResponseDateTextBox.Text = txt;
+        }
+
+        internal void SetClientDoneResponseTimeTextBoxText(string txt)
+        {
+            ClientDoneResponseTimeTextBox.Text = txt;
+        }
+
+        internal void SetClientDoneResponseTransmitTimeTextBoxText(string txt)
+        {
+            ClientDoneResponseTransmitTimeTextBox.Text = txt;
         }
 
         private void HTTPStatusCodeLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -460,7 +486,7 @@ namespace EXOFiddlerInspector
                 "Server Begin Response: " + ServerBeginResponseDateTextbox.Text + " " + ServerBeginResponseTimeTextbox.Text + Environment.NewLine +
                 "Server Done Response: " + ServerDoneResponseDateTextbox.Text + " " + ServerDoneResponseTimeTextbox.Text + Environment.NewLine +
                 "Server Think Time: " + ServerThinkTimeTextbox.Text + " " + Environment.NewLine +
-                "Transmit Time Back to Outlook or Browser (OWA): " + TransmitTimeTextbox.Text + Environment.NewLine + 
+                "Transmit Time Back to Outlook or Browser (OWA): " + ServerDoneResponseTransmitTimeTextbox.Text + Environment.NewLine + 
                 "Local Process: " + ResponseProcessTextBox.Text + Environment.NewLine +
                 "Exchange Type: " + ExchangeTypeTextbox.Text + Environment.NewLine +
                 "Response Server: " + ResponseServerTextBox.Text + Environment.NewLine +

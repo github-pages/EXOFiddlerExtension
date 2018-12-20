@@ -390,6 +390,14 @@ namespace EXOFiddlerInspector
 
             _displayControl.SetXHostIPTextBoxText("");
 
+            _displayControl.SetClientBeginResponseDateTextBoxText("");
+            _displayControl.SetClientBeginResponseTimeTextBoxText("");
+
+            _displayControl.SetClientDoneResponseDateTextBoxText("");
+            _displayControl.SetClientDoneResponseTimeTextBoxText("");
+
+            _displayControl.SetClientDoneResponseTransmitTimeTextBoxText("");
+
             // Write data into hidden fields.
             _displayControl.SetRequestHeadersTextBoxText(this.session.oRequest.headers.ToString());
             _displayControl.SetRequestBodyTextBoxText(this.session.GetRequestBodyAsString());
@@ -536,6 +544,16 @@ namespace EXOFiddlerInspector
                     }
                 }
             }
+
+            _displayControl.SetClientBeginResponseDateTextBoxText(this.session.Timers.ClientBeginResponse.ToString("yyyy/MM/dd"));
+            _displayControl.SetClientBeginResponseTimeTextBoxText(this.session.Timers.ClientBeginResponse.ToString("H:mm:ss.fff"));
+
+            _displayControl.SetClientDoneResponseDateTextBoxText(this.session.Timers.ClientDoneResponse.ToString("yyyy/MM/dd"));
+            _displayControl.SetClientDoneResponseTimeTextBoxText(this.session.Timers.ClientDoneResponse.ToString("H:mm:ss.fff"));
+
+            double ClientDoneMilliseconds = Math.Round((this.session.Timers.ClientDoneResponse - this.session.Timers.ClientBeginResponse).TotalMilliseconds);
+
+            _displayControl.SetClientDoneResponseTransmitTimeTextBoxText(ClientDoneMilliseconds + "ms");
 
             _displayControl.SetXHostIPTextBoxText(this.session["X-HostIP"]);
 

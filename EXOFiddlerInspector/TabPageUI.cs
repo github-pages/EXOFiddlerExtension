@@ -49,9 +49,10 @@ namespace EXOFiddlerInspector
                 }
             }
             */
+
             oView.SetUserIdentityTextBoxText(FiddlerApplication.Prefs.GetStringPref("extensions.EXOFiddlerExtension.UserIdentity", "Not Found"));
             oView.SetAnchorMailboxTextBoxText(FiddlerApplication.Prefs.GetStringPref("extensions.EXOFiddlerExtension.AnchorMailbox", "Not Found"));
-            oView.SetRedirectAddressTextBoxText(FiddlerApplication.Prefs.GetStringPref(SessionRuleSet.UserIdentity);
+            //oView.SetRedirectAddressTextBoxText(FiddlerApplication.Prefs.GetStringPref(SessionRuleSet.UserIdentity);
             
 
 
