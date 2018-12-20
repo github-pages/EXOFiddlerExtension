@@ -43,7 +43,6 @@
             this.SigningCertificateGroupbox = new System.Windows.Forms.GroupBox();
             this.SigningCertificateTextbox = new System.Windows.Forms.TextBox();
             this.STSLinkLabel = new System.Windows.Forms.LinkLabel();
-            this.ClickableLinkLabel = new System.Windows.Forms.Label();
             this.SAMLResponseParserGroupbox.SuspendLayout();
             this.Office365AuthenticationGroupbox.SuspendLayout();
             this.SigningCertificateGroupbox.SuspendLayout();
@@ -51,7 +50,6 @@
             // 
             // SAMLResponseParserGroupbox
             // 
-            this.SAMLResponseParserGroupbox.Controls.Add(this.ClickableLinkLabel);
             this.SAMLResponseParserGroupbox.Controls.Add(this.STSLinkLabel);
             this.SAMLResponseParserGroupbox.Controls.Add(this.SaveSigningCertificateButton);
             this.SAMLResponseParserGroupbox.Controls.Add(this.OpenSigningCertificateButton);
@@ -206,22 +204,13 @@
             // STSLinkLabel
             // 
             this.STSLinkLabel.AutoSize = true;
-            this.STSLinkLabel.Location = new System.Drawing.Point(72, 16);
+            this.STSLinkLabel.Location = new System.Drawing.Point(2, 16);
             this.STSLinkLabel.Name = "STSLinkLabel";
             this.STSLinkLabel.Size = new System.Drawing.Size(157, 13);
             this.STSLinkLabel.TabIndex = 9;
             this.STSLinkLabel.TabStop = true;
             this.STSLinkLabel.Text = "https://sts.contoso.com/adfs/ls";
             this.STSLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.STSLinkLabel_LinkClicked);
-            // 
-            // ClickableLinkLabel
-            // 
-            this.ClickableLinkLabel.AutoSize = true;
-            this.ClickableLinkLabel.Location = new System.Drawing.Point(2, 16);
-            this.ClickableLinkLabel.Name = "ClickableLinkLabel";
-            this.ClickableLinkLabel.Size = new System.Drawing.Size(72, 13);
-            this.ClickableLinkLabel.TabIndex = 10;
-            this.ClickableLinkLabel.Text = "Clickable link:";
             // 
             // Office365AuthUserControl
             // 
@@ -231,7 +220,7 @@
             this.Controls.Add(this.SAMLResponseParserGroupbox);
             this.Controls.Add(this.Office365AuthenticationGroupbox);
             this.Name = "Office365AuthUserControl";
-            this.Size = new System.Drawing.Size(869, 694);
+            this.Size = new System.Drawing.Size(869, 572);
             this.SAMLResponseParserGroupbox.ResumeLayout(false);
             this.SAMLResponseParserGroupbox.PerformLayout();
             this.Office365AuthenticationGroupbox.ResumeLayout(false);
@@ -259,6 +248,5 @@
         private System.Windows.Forms.Button SaveSigningCertificateButton;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.LinkLabel STSLinkLabel;
-        private System.Windows.Forms.Label ClickableLinkLabel;
     }
 }

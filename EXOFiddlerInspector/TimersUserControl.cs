@@ -120,5 +120,27 @@ namespace EXOFiddlerInspector
         {
             ClientDoneResponseTransmitTimeTextBox.Text = txt;
         }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                VisitLink();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Unable to open link that was clicked.");
+            }
+        }
+
+        private void VisitLink()
+        {
+            // Change the color of the link text by setting LinkVisited   
+            // to true.  
+            TimersDefinitionsLinkLabel.LinkVisited = true;
+            //Call the Process.Start method to open the default browser   
+            //with a URL:  
+            System.Diagnostics.Process.Start(TimersDefinitionsLinkLabel.Text);
+        }
     }
 }

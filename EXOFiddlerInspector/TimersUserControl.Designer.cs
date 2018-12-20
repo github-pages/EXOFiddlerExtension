@@ -61,6 +61,8 @@
             this.ClientRequestEndTimeTextBox = new System.Windows.Forms.TextBox();
             this.ClientRequestBeginDateTextBox = new System.Windows.Forms.TextBox();
             this.ClientRequestEndDateTextBox = new System.Windows.Forms.TextBox();
+            this.TimersLabel = new System.Windows.Forms.Label();
+            this.TimersDefinitionsLinkLabel = new System.Windows.Forms.LinkLabel();
             this.TransmitTimeFiddlerToClientApp.SuspendLayout();
             this.TransmitTimeResponseServerToFiddlerGroupBox.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -77,7 +79,7 @@
             this.TransmitTimeFiddlerToClientApp.Controls.Add(this.ClientBeginResponseTimeTextBox);
             this.TransmitTimeFiddlerToClientApp.Controls.Add(this.ClientBeginResponseDateTextBox);
             this.TransmitTimeFiddlerToClientApp.Controls.Add(this.ClientBeginResponseLabel);
-            this.TransmitTimeFiddlerToClientApp.Location = new System.Drawing.Point(3, 210);
+            this.TransmitTimeFiddlerToClientApp.Location = new System.Drawing.Point(3, 227);
             this.TransmitTimeFiddlerToClientApp.Name = "TransmitTimeFiddlerToClientApp";
             this.TransmitTimeFiddlerToClientApp.Size = new System.Drawing.Size(424, 71);
             this.TransmitTimeFiddlerToClientApp.TabIndex = 80;
@@ -153,7 +155,7 @@
             this.TransmitTimeResponseServerToFiddlerGroupBox.Controls.Add(this.ServerDoneResponseTimeTextbox);
             this.TransmitTimeResponseServerToFiddlerGroupBox.Controls.Add(this.TransmitLabel);
             this.TransmitTimeResponseServerToFiddlerGroupBox.Controls.Add(this.ServerDoneResponseLabel);
-            this.TransmitTimeResponseServerToFiddlerGroupBox.Location = new System.Drawing.Point(3, 155);
+            this.TransmitTimeResponseServerToFiddlerGroupBox.Location = new System.Drawing.Point(3, 172);
             this.TransmitTimeResponseServerToFiddlerGroupBox.Name = "TransmitTimeResponseServerToFiddlerGroupBox";
             this.TransmitTimeResponseServerToFiddlerGroupBox.Size = new System.Drawing.Size(424, 49);
             this.TransmitTimeResponseServerToFiddlerGroupBox.TabIndex = 79;
@@ -213,7 +215,7 @@
             this.groupBox2.Controls.Add(this.ServerBeginResponseDateTextbox);
             this.groupBox2.Controls.Add(this.ServerGotRequestDateTextbox);
             this.groupBox2.Controls.Add(this.ServerGotRequestLabel);
-            this.groupBox2.Location = new System.Drawing.Point(3, 78);
+            this.groupBox2.Location = new System.Drawing.Point(3, 95);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(424, 71);
             this.groupBox2.TabIndex = 78;
@@ -302,7 +304,7 @@
             this.groupBox1.Controls.Add(this.ClientRequestEndTimeTextBox);
             this.groupBox1.Controls.Add(this.ClientRequestBeginDateTextBox);
             this.groupBox1.Controls.Add(this.ClientRequestEndDateTextBox);
-            this.groupBox1.Location = new System.Drawing.Point(3, 3);
+            this.groupBox1.Location = new System.Drawing.Point(3, 20);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(424, 69);
             this.groupBox1.TabIndex = 77;
@@ -381,16 +383,38 @@
             this.ClientRequestEndDateTextBox.Size = new System.Drawing.Size(68, 20);
             this.ClientRequestEndDateTextBox.TabIndex = 32;
             // 
+            // TimersLabel
+            // 
+            this.TimersLabel.AutoSize = true;
+            this.TimersLabel.Location = new System.Drawing.Point(4, 4);
+            this.TimersLabel.Name = "TimersLabel";
+            this.TimersLabel.Size = new System.Drawing.Size(183, 13);
+            this.TimersLabel.TabIndex = 81;
+            this.TimersLabel.Text = "Need help on what these mean? See";
+            // 
+            // TimersDefinitionsLinkLabel
+            // 
+            this.TimersDefinitionsLinkLabel.AutoSize = true;
+            this.TimersDefinitionsLinkLabel.Location = new System.Drawing.Point(182, 4);
+            this.TimersDefinitionsLinkLabel.Name = "TimersDefinitionsLinkLabel";
+            this.TimersDefinitionsLinkLabel.Size = new System.Drawing.Size(165, 13);
+            this.TimersDefinitionsLinkLabel.TabIndex = 82;
+            this.TimersDefinitionsLinkLabel.TabStop = true;
+            this.TimersDefinitionsLinkLabel.Text = "https://aka.ms/Timers-Definitions";
+            this.TimersDefinitionsLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
             // TimersUserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.TimersDefinitionsLinkLabel);
+            this.Controls.Add(this.TimersLabel);
             this.Controls.Add(this.TransmitTimeFiddlerToClientApp);
             this.Controls.Add(this.TransmitTimeResponseServerToFiddlerGroupBox);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "TimersUserControl";
-            this.Size = new System.Drawing.Size(454, 306);
+            this.Size = new System.Drawing.Size(446, 335);
             this.TransmitTimeFiddlerToClientApp.ResumeLayout(false);
             this.TransmitTimeFiddlerToClientApp.PerformLayout();
             this.TransmitTimeResponseServerToFiddlerGroupBox.ResumeLayout(false);
@@ -400,6 +424,7 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -438,5 +463,7 @@
         private System.Windows.Forms.TextBox ClientRequestEndTimeTextBox;
         private System.Windows.Forms.TextBox ClientRequestBeginDateTextBox;
         private System.Windows.Forms.TextBox ClientRequestEndDateTextBox;
+        private System.Windows.Forms.Label TimersLabel;
+        private System.Windows.Forms.LinkLabel TimersDefinitionsLinkLabel;
     }
 }
