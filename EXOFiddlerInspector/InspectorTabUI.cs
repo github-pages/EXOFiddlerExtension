@@ -372,31 +372,7 @@ namespace EXOFiddlerInspector
             _displayControl.SetResponseBodyTextBoxText("");
             _displayControl.SetExchangeTypeTextBoxText("");
 
-            _displayControl.SetClientRequestBeginDateTextBox("");
-            _displayControl.SetClientRequestBeginTimeTextBox("");
-
-            _displayControl.SetClientRequestEndDateTextBox("");
-            _displayControl.SetClientRequestEndTimeTextBox("");
-
-            _displayControl.SetOverallElapsedTextbox("");
-
-            _displayControl.SetServerGotRequestDateTextbox("");
-            _displayControl.SetServerGotRequestTimeTextbox("");
-
-            _displayControl.SetServerDoneResponseDateTextbox("");
-            _displayControl.SetServerDoneResponseTimeTextbox("");
-
-            _displayControl.SetServerThinkTimeTextbox("");
-
             _displayControl.SetXHostIPTextBoxText("");
-
-            _displayControl.SetClientBeginResponseDateTextBoxText("");
-            _displayControl.SetClientBeginResponseTimeTextBoxText("");
-
-            _displayControl.SetClientDoneResponseDateTextBoxText("");
-            _displayControl.SetClientDoneResponseTimeTextBoxText("");
-
-            _displayControl.SetClientDoneResponseTransmitTimeTextBoxText("");
 
             // Write data into hidden fields.
             _displayControl.SetRequestHeadersTextBoxText(this.session.oRequest.headers.ToString());
@@ -417,26 +393,12 @@ namespace EXOFiddlerInspector
 
             if (this.session.Timers.ClientBeginRequest.ToString("H:mm:ss.fff") == "0:00:00.000" || this.session.Timers.ClientDoneResponse.ToString("H:mm:ss.fff") == "0:00:00.000")
             {
-                _displayControl.SetClientRequestBeginDateTextBox("No Data");
-                _displayControl.SetClientRequestBeginTimeTextBox("No Data");
-
-                _displayControl.SetClientRequestEndDateTextBox("No Data");
-                _displayControl.SetClientRequestEndTimeTextBox("No Data");
-
-                _displayControl.SetOverallElapsedTextbox("No Data");
+                // Do nothing here.
 
             }
             else
             {
-                _displayControl.SetClientRequestBeginDateTextBox(this.session.Timers.ClientBeginRequest.ToString("yyyy/MM/dd"));
-                _displayControl.SetClientRequestBeginTimeTextBox(this.session.Timers.ClientBeginRequest.ToString("H:mm:ss.fff"));
-
-                _displayControl.SetClientRequestEndDateTextBox(this.session.Timers.ClientDoneResponse.ToString("yyyy/MM/dd"));
-                _displayControl.SetClientRequestEndTimeTextBox(this.session.Timers.ClientDoneResponse.ToString("H:mm:ss.fff"));
-
                 double ClientMilliseconds = Math.Round((this.session.Timers.ClientDoneResponse - this.session.Timers.ClientBeginRequest).TotalMilliseconds);
-
-                _displayControl.SetOverallElapsedTextbox(ClientMilliseconds + "ms");
 
                 /// <remarks>
                 /// Notify on slow running session with threshold pulled from Preferences.cs.
@@ -470,7 +432,7 @@ namespace EXOFiddlerInspector
                         FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " Long running session.");
                     }
                 }
-                
+
             }
 
             /// <remarks>
@@ -481,37 +443,11 @@ namespace EXOFiddlerInspector
                 this.session.Timers.ServerBeginResponse.ToString("H:mm:ss.fff") == "0:00:00.000" ||
                 this.session.Timers.ServerDoneResponse.ToString("H:mm:ss.fff") == "0:00:00.000")
             {
-                // No data on the session to write or calculate on.
-                _displayControl.SetServerGotRequestDateTextbox("No Data");
-                _displayControl.SetServerGotRequestTimeTextbox("No Data");
-
-                _displayControl.SetServerBeginResponseDateTextbox("No Data");
-                _displayControl.SetServerBeginResponseTimeTextbox("No Data");
-
-                _displayControl.SetServerDoneResponseDateTextbox("No Data");
-                _displayControl.SetServerDoneResponseTimeTextbox("No Data");
-
-                _displayControl.SetServerThinkTimeTextbox("No Data");
-
-                _displayControl.SetTransmitTimeTextbox("No Data");
+                // Do nothing here.
             }
             else
             {
-                // Write Server data into textboxes.
-                _displayControl.SetServerGotRequestDateTextbox(this.session.Timers.ServerGotRequest.ToString("yyyy/MM/dd"));
-                _displayControl.SetServerGotRequestTimeTextbox(this.session.Timers.ServerGotRequest.ToString("H:mm:ss.fff"));
-
-                _displayControl.SetServerBeginResponseDateTextbox(this.session.Timers.ServerBeginResponse.ToString("yyyy/MM/dd"));
-                _displayControl.SetServerBeginResponseTimeTextbox(this.session.Timers.ServerBeginResponse.ToString("H:mm:ss.fff"));
-
-                _displayControl.SetServerDoneResponseDateTextbox(this.session.Timers.ServerDoneResponse.ToString("yyyy/MM/dd"));
-                _displayControl.SetServerDoneResponseTimeTextbox(this.session.Timers.ServerDoneResponse.ToString("H:mm:ss.fff"));
-
                 double ServerMilliseconds = Math.Round((this.session.Timers.ServerBeginResponse - this.session.Timers.ServerGotRequest).TotalMilliseconds);
-
-                _displayControl.SetServerThinkTimeTextbox(ServerMilliseconds + "ms");
-
-                _displayControl.SetTransmitTimeTextbox(Math.Round((this.session.Timers.ServerDoneResponse - this.session.Timers.ServerBeginResponse).TotalMilliseconds) + "ms");
 
                 /// <remarks>
                 /// Notify on slow running session with threshold pulled from Preferences.cs.
@@ -544,16 +480,6 @@ namespace EXOFiddlerInspector
                     }
                 }
             }
-
-            _displayControl.SetClientBeginResponseDateTextBoxText(this.session.Timers.ClientBeginResponse.ToString("yyyy/MM/dd"));
-            _displayControl.SetClientBeginResponseTimeTextBoxText(this.session.Timers.ClientBeginResponse.ToString("H:mm:ss.fff"));
-
-            _displayControl.SetClientDoneResponseDateTextBoxText(this.session.Timers.ClientDoneResponse.ToString("yyyy/MM/dd"));
-            _displayControl.SetClientDoneResponseTimeTextBoxText(this.session.Timers.ClientDoneResponse.ToString("H:mm:ss.fff"));
-
-            double ClientDoneMilliseconds = Math.Round((this.session.Timers.ClientDoneResponse - this.session.Timers.ClientBeginResponse).TotalMilliseconds);
-
-            _displayControl.SetClientDoneResponseTransmitTimeTextBoxText(ClientDoneMilliseconds + "ms");
 
             _displayControl.SetXHostIPTextBoxText(this.session["X-HostIP"]);
 

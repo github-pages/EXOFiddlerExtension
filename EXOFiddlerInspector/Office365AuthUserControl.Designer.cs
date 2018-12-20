@@ -42,6 +42,8 @@
             this.AuthenticationResponseCommentsTextbox = new System.Windows.Forms.TextBox();
             this.SigningCertificateGroupbox = new System.Windows.Forms.GroupBox();
             this.SigningCertificateTextbox = new System.Windows.Forms.TextBox();
+            this.STSLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.ClickableLinkLabel = new System.Windows.Forms.Label();
             this.SAMLResponseParserGroupbox.SuspendLayout();
             this.Office365AuthenticationGroupbox.SuspendLayout();
             this.SigningCertificateGroupbox.SuspendLayout();
@@ -49,6 +51,8 @@
             // 
             // SAMLResponseParserGroupbox
             // 
+            this.SAMLResponseParserGroupbox.Controls.Add(this.ClickableLinkLabel);
+            this.SAMLResponseParserGroupbox.Controls.Add(this.STSLinkLabel);
             this.SAMLResponseParserGroupbox.Controls.Add(this.SaveSigningCertificateButton);
             this.SAMLResponseParserGroupbox.Controls.Add(this.OpenSigningCertificateButton);
             this.SAMLResponseParserGroupbox.Controls.Add(this.AttributeNameImmutableIDTextBox);
@@ -59,7 +63,7 @@
             this.SAMLResponseParserGroupbox.Controls.Add(this.IssuerTextBox);
             this.SAMLResponseParserGroupbox.Location = new System.Drawing.Point(3, 244);
             this.SAMLResponseParserGroupbox.Name = "SAMLResponseParserGroupbox";
-            this.SAMLResponseParserGroupbox.Size = new System.Drawing.Size(424, 323);
+            this.SAMLResponseParserGroupbox.Size = new System.Drawing.Size(424, 320);
             this.SAMLResponseParserGroupbox.TabIndex = 0;
             this.SAMLResponseParserGroupbox.TabStop = false;
             this.SAMLResponseParserGroupbox.Text = "SAML Response Parser";
@@ -68,7 +72,7 @@
             // 
             // SaveSigningCertificateButton
             // 
-            this.SaveSigningCertificateButton.Location = new System.Drawing.Point(125, 292);
+            this.SaveSigningCertificateButton.Location = new System.Drawing.Point(126, 290);
             this.SaveSigningCertificateButton.Name = "SaveSigningCertificateButton";
             this.SaveSigningCertificateButton.Size = new System.Drawing.Size(143, 23);
             this.SaveSigningCertificateButton.TabIndex = 8;
@@ -78,7 +82,7 @@
             // 
             // OpenSigningCertificateButton
             // 
-            this.OpenSigningCertificateButton.Location = new System.Drawing.Point(125, 263);
+            this.OpenSigningCertificateButton.Location = new System.Drawing.Point(126, 261);
             this.OpenSigningCertificateButton.Name = "OpenSigningCertificateButton";
             this.OpenSigningCertificateButton.Size = new System.Drawing.Size(143, 23);
             this.OpenSigningCertificateButton.TabIndex = 3;
@@ -89,7 +93,7 @@
             // AttributeNameImmutableIDTextBox
             // 
             this.AttributeNameImmutableIDTextBox.BackColor = System.Drawing.Color.White;
-            this.AttributeNameImmutableIDTextBox.Location = new System.Drawing.Point(6, 177);
+            this.AttributeNameImmutableIDTextBox.Location = new System.Drawing.Point(5, 175);
             this.AttributeNameImmutableIDTextBox.Multiline = true;
             this.AttributeNameImmutableIDTextBox.Name = "AttributeNameImmutableIDTextBox";
             this.AttributeNameImmutableIDTextBox.ReadOnly = true;
@@ -99,7 +103,7 @@
             // NameIdentifierFormatTextBox
             // 
             this.NameIdentifierFormatTextBox.BackColor = System.Drawing.Color.White;
-            this.NameIdentifierFormatTextBox.Location = new System.Drawing.Point(6, 111);
+            this.NameIdentifierFormatTextBox.Location = new System.Drawing.Point(5, 114);
             this.NameIdentifierFormatTextBox.Multiline = true;
             this.NameIdentifierFormatTextBox.Name = "NameIdentifierFormatTextBox";
             this.NameIdentifierFormatTextBox.ReadOnly = true;
@@ -108,7 +112,7 @@
             // 
             // SaveSAMLDataButton
             // 
-            this.SaveSAMLDataButton.Location = new System.Drawing.Point(274, 292);
+            this.SaveSAMLDataButton.Location = new System.Drawing.Point(275, 290);
             this.SaveSAMLDataButton.Name = "SaveSAMLDataButton";
             this.SaveSAMLDataButton.Size = new System.Drawing.Size(143, 23);
             this.SaveSAMLDataButton.TabIndex = 6;
@@ -119,7 +123,7 @@
             // AttributeNameUPNTextBox
             // 
             this.AttributeNameUPNTextBox.BackColor = System.Drawing.Color.White;
-            this.AttributeNameUPNTextBox.Location = new System.Drawing.Point(6, 45);
+            this.AttributeNameUPNTextBox.Location = new System.Drawing.Point(5, 53);
             this.AttributeNameUPNTextBox.Multiline = true;
             this.AttributeNameUPNTextBox.Name = "AttributeNameUPNTextBox";
             this.AttributeNameUPNTextBox.ReadOnly = true;
@@ -128,7 +132,7 @@
             // 
             // OpenSAMLDataButton
             // 
-            this.OpenSAMLDataButton.Location = new System.Drawing.Point(274, 263);
+            this.OpenSAMLDataButton.Location = new System.Drawing.Point(275, 261);
             this.OpenSAMLDataButton.Name = "OpenSAMLDataButton";
             this.OpenSAMLDataButton.Size = new System.Drawing.Size(143, 23);
             this.OpenSAMLDataButton.TabIndex = 7;
@@ -139,7 +143,7 @@
             // IssuerTextBox
             // 
             this.IssuerTextBox.BackColor = System.Drawing.Color.White;
-            this.IssuerTextBox.Location = new System.Drawing.Point(6, 19);
+            this.IssuerTextBox.Location = new System.Drawing.Point(5, 32);
             this.IssuerTextBox.Name = "IssuerTextBox";
             this.IssuerTextBox.ReadOnly = true;
             this.IssuerTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
@@ -199,6 +203,26 @@
             this.SigningCertificateTextbox.Size = new System.Drawing.Size(412, 218);
             this.SigningCertificateTextbox.TabIndex = 0;
             // 
+            // STSLinkLabel
+            // 
+            this.STSLinkLabel.AutoSize = true;
+            this.STSLinkLabel.Location = new System.Drawing.Point(72, 16);
+            this.STSLinkLabel.Name = "STSLinkLabel";
+            this.STSLinkLabel.Size = new System.Drawing.Size(157, 13);
+            this.STSLinkLabel.TabIndex = 9;
+            this.STSLinkLabel.TabStop = true;
+            this.STSLinkLabel.Text = "https://sts.contoso.com/adfs/ls";
+            this.STSLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.STSLinkLabel_LinkClicked);
+            // 
+            // ClickableLinkLabel
+            // 
+            this.ClickableLinkLabel.AutoSize = true;
+            this.ClickableLinkLabel.Location = new System.Drawing.Point(2, 16);
+            this.ClickableLinkLabel.Name = "ClickableLinkLabel";
+            this.ClickableLinkLabel.Size = new System.Drawing.Size(72, 13);
+            this.ClickableLinkLabel.TabIndex = 10;
+            this.ClickableLinkLabel.Text = "Clickable link:";
+            // 
             // Office365AuthUserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -207,7 +231,7 @@
             this.Controls.Add(this.SAMLResponseParserGroupbox);
             this.Controls.Add(this.Office365AuthenticationGroupbox);
             this.Name = "Office365AuthUserControl";
-            this.Size = new System.Drawing.Size(869, 577);
+            this.Size = new System.Drawing.Size(869, 694);
             this.SAMLResponseParserGroupbox.ResumeLayout(false);
             this.SAMLResponseParserGroupbox.PerformLayout();
             this.Office365AuthenticationGroupbox.ResumeLayout(false);
@@ -234,5 +258,7 @@
         private System.Windows.Forms.Button OpenSigningCertificateButton;
         private System.Windows.Forms.Button SaveSigningCertificateButton;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.LinkLabel STSLinkLabel;
+        private System.Windows.Forms.Label ClickableLinkLabel;
     }
 }

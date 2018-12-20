@@ -80,84 +80,6 @@ namespace EXOFiddlerInspector
             HTTPStatusDescriptionTextBox.Text = txt;
         }
 
-        // Code to write to ClientRequestBeginTimeTextBox.Text value.
-        internal void SetClientRequestBeginTimeTextBox(string txt)
-        {
-            ClientRequestBeginTimeTextBox.Text = txt;
-        }
-
-        // Code to write to ClientRequestBeginDateTextBox.Text value.
-        internal void SetClientRequestBeginDateTextBox(string txt)
-        {
-            ClientRequestBeginDateTextBox.Text = txt;
-        }
-
-        // Code to write to ClientRequestEndTimeTextBox.Text value.
-        internal void SetClientRequestEndTimeTextBox(string txt)
-        {
-            ClientRequestEndTimeTextBox.Text = txt;
-        }
-
-        // Code to write to ClientRequestEndDateTextBox.Text value.
-        internal void SetClientRequestEndDateTextBox(string txt)
-        {
-            ClientRequestEndDateTextBox.Text = txt;
-        }
-
-        // Code to write to ServerGotRequestDateTextbox.Text value.
-        internal void SetServerGotRequestDateTextbox(string txt)
-        {
-            ServerGotRequestDateTextbox.Text = txt;
-        }
-
-        // Code to write to ServerGotRequestTimeTextbox.Text value.
-        internal void SetServerGotRequestTimeTextbox(string txt)
-        {
-            ServerGotRequestTimeTextbox.Text = txt;
-        }
-
-        // Code to write to ServerBeginResponseDateTextbox.Text value.
-        internal void SetServerBeginResponseDateTextbox(string txt)
-        {
-            ServerBeginResponseDateTextbox.Text = txt;
-        }
-
-        // Code to write to ServerBeginResponseTimeTextbox.Text value.
-        internal void SetServerBeginResponseTimeTextbox(string txt)
-        {
-            ServerBeginResponseTimeTextbox.Text = txt;
-        }
-
-
-        // Code to write to ServerDoneResponseDateTextbox.Text value.
-        internal void SetServerDoneResponseDateTextbox(string txt)
-        {
-            ServerDoneResponseDateTextbox.Text = txt;
-        }
-
-        // Code to write to ServerDoneResponseTimeTextbox.Text value.
-        internal void SetServerDoneResponseTimeTextbox(string txt)
-        {
-            ServerDoneResponseTimeTextbox.Text = txt;
-        }
-
-        // Code to write to ClientBeginRequestDoneResponseDurationTextbox.Text value.
-        internal void SetOverallElapsedTextbox(string txt)
-        {
-            OverallElapsedTextbox.Text = txt;
-        }
-
-        // Code to write to ServerBeginRequestDoneResponseDurationTextbox.Text value.
-        internal void SetServerThinkTimeTextbox(string txt)
-        {
-            ServerThinkTimeTextbox.Text = txt;
-        }
-
-        internal void SetTransmitTimeTextbox(string txt)
-        {
-            ServerDoneResponseTransmitTimeTextbox.Text = txt;
-        }
-
         // Code to write to ResponseAlertTextBox.Text value.
         internal void SetResponseAlertTextBox(string txt)
         {
@@ -222,32 +144,6 @@ namespace EXOFiddlerInspector
         internal void SetXHostIPTextBoxText(string txt)
         {
             XHostIPTextbox.Text = txt;
-        }
-
-        internal void SetClientBeginResponseDateTextBoxText(string txt)
-        {
-            ClientBeginResponseDateTextBox.Text = txt;
-        }
-
-        internal void SetClientBeginResponseTimeTextBoxText(string txt)
-        {
-            ClientBeginResponseTimeTextBox.Text = txt;
-        }
-
-
-        internal void SetClientDoneResponseDateTextBoxText(string txt)
-        {
-            ClientDoneResponseDateTextBox.Text = txt;
-        }
-
-        internal void SetClientDoneResponseTimeTextBoxText(string txt)
-        {
-            ClientDoneResponseTimeTextBox.Text = txt;
-        }
-
-        internal void SetClientDoneResponseTransmitTimeTextBoxText(string txt)
-        {
-            ClientDoneResponseTransmitTimeTextBox.Text = txt;
         }
 
         private void HTTPStatusCodeLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -479,14 +375,14 @@ namespace EXOFiddlerInspector
             SessionData = "HIGH LEVEL SESSION DATA" + Environment.NewLine + Environment.NewLine +
                 "Session ID: " + SessionIDTextbox.Text + Environment.NewLine +
                 "HTTP Response Code: " + HTTPResponseCodeTextBox.Text + Environment.NewLine +
-                "Client Begin Request: " + ClientRequestBeginDateTextBox.Text + " " + ClientRequestBeginTimeTextBox.Text + Environment.NewLine +
-                "Client Done Response: " + ClientRequestEndDateTextBox.Text + " " + ClientRequestEndTimeTextBox.Text + Environment.NewLine +
-                "Overall Elapsed Time: " + OverallElapsedTextbox.Text + " " + Environment.NewLine +
-                "Server Got Request: " + ServerGotRequestDateTextbox.Text + " " + ServerGotRequestTimeTextbox.Text + Environment.NewLine +
-                "Server Begin Response: " + ServerBeginResponseDateTextbox.Text + " " + ServerBeginResponseTimeTextbox.Text + Environment.NewLine +
-                "Server Done Response: " + ServerDoneResponseDateTextbox.Text + " " + ServerDoneResponseTimeTextbox.Text + Environment.NewLine +
-                "Server Think Time: " + ServerThinkTimeTextbox.Text + " " + Environment.NewLine +
-                "Transmit Time Back to Outlook or Browser (OWA): " + ServerDoneResponseTransmitTimeTextbox.Text + Environment.NewLine + 
+                //"Client Begin Request: " + ClientRequestBeginDateTextBox.Text + " " + ClientRequestBeginTimeTextBox.Text + Environment.NewLine +
+                //"Client Done Response: " + ClientRequestEndDateTextBox.Text + " " + ClientRequestEndTimeTextBox.Text + Environment.NewLine +
+                //"Overall Elapsed Time: " + OverallElapsedTextbox.Text + " " + Environment.NewLine +
+                //"Server Got Request: " + ServerGotRequestDateTextbox.Text + " " + ServerGotRequestTimeTextbox.Text + Environment.NewLine +
+                //"Server Begin Response: " + ServerBeginResponseDateTextbox.Text + " " + ServerBeginResponseTimeTextbox.Text + Environment.NewLine +
+                //"Server Done Response: " + ServerDoneResponseDateTextbox.Text + " " + ServerDoneResponseTimeTextbox.Text + Environment.NewLine +
+                //"Server Think Time: " + ServerThinkTimeTextbox.Text + " " + Environment.NewLine +
+                //"Transmit Time Back to Outlook or Browser (OWA): " + ServerDoneResponseTransmitTimeTextbox.Text + Environment.NewLine + 
                 "Local Process: " + ResponseProcessTextBox.Text + Environment.NewLine +
                 "Exchange Type: " + ExchangeTypeTextbox.Text + Environment.NewLine +
                 "Response Server: " + ResponseServerTextBox.Text + Environment.NewLine +
@@ -577,36 +473,6 @@ namespace EXOFiddlerInspector
             FiddlerApplication.Prefs.RemovePref("extensions.EXOFiddlerExtension.HostIPColumnEnabled");
             FiddlerApplication.Prefs.RemovePref("extensions.EXOFiddlerExtension.AuthColumnEnabled");
             MessageBox.Show("Removed extensions.EXOFiddlerInspector Prefs.");
-        }
-
-        private void ServerResponseDurationTextbox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void ServerGotRequestLabel_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void ServerGotRequestTimeTextbox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void ServerResponseDurationLabel_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void TransmitLabel_Click(object sender, EventArgs e)
-        {
-
         }
 
         public static implicit operator ResponseUserControl(Office365AuthUserControl v)

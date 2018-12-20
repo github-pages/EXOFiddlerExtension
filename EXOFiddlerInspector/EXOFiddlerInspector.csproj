@@ -98,6 +98,13 @@
     <Compile Include="TabPageUserControl.Designer.cs">
       <DependentUpon>TabPageUserControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="TimersUI.cs" />
+    <Compile Include="TimersUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TimersUserControl.Designer.cs">
+      <DependentUpon>TimersUserControl.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -115,6 +122,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="TabPageUserControl.resx">
       <DependentUpon>TabPageUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TimersUserControl.resx">
+      <DependentUpon>TimersUserControl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

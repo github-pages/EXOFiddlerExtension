@@ -58,6 +58,8 @@ namespace EXOFiddlerInspector
         {
             this.session = session;
 
+            _Office365AuthUserControl.SetSTSLinkLabelText(this.session["X-Issuer-URL"]);
+
             _Office365AuthUserControl.SetAuthenticationResponseComments(this.session["X-AuthenticationDesc"]);
 
             _Office365AuthUserControl.SetIssuerTextBox(this.session["X-Issuer"]);

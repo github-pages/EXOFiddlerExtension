@@ -1653,6 +1653,10 @@ namespace EXOFiddlerInspector
 
                         // Populate X flag on session.
                         this.session["X-Issuer"] = Issuer;
+
+                        Issuer = Issuer.Replace("\"", "");
+                        Issuer = Issuer.Replace("Issuer=", "");
+                        this.session["X-Issuer-URL"] = Issuer;
                     }
                 }
                 else

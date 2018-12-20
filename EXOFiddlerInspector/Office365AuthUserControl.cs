@@ -71,6 +71,11 @@ namespace EXOFiddlerInspector
             SigningCertificateTextbox.Text = txt;
         }
 
+        internal void SetSTSLinkLabelText(string txt)
+        {
+            STSLinkLabel.Text = txt;
+        }
+
         private void OpenSAMLDataButton_Click(object sender, EventArgs e)
         {
             // As the user has elected to open the file instead of save somewhere specific, write data out to a text file in %TEMP% environment variable and open it up in Notepad.
@@ -185,6 +190,28 @@ namespace EXOFiddlerInspector
             {
                 Office365AuthenticationGroupbox.Location = new Point(3, 300);
             }
+        }
+
+        private void STSLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                VisitLink();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Unable to open link that was clicked.");
+            }
+        }
+
+        private void VisitLink()
+        {
+            // Change the color of the link text by setting LinkVisited   
+            // to true.  
+            STSLinkLabel.LinkVisited = true;
+            //Call the Process.Start method to open the default browser   
+            //with a URL:  
+            System.Diagnostics.Process.Start(STSLinkLabel.Text);
         }
     }
 }
