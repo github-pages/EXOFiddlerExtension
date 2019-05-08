@@ -30,6 +30,8 @@ namespace EXOFiddlerInspector
             public int Build { get; set; }
         }
 
+        public bool BetaTestingActive { get; set; }
+
         public string JSONSource { get; set; }
         public string InstallerURL { get; set; }
         public string WikiURL { get; set; }
@@ -74,7 +76,7 @@ namespace EXOFiddlerInspector
                     {
                         // Application version detected is a beta version.
 
-                        if (JsonData.BetaVersionAvailable.Build.ToString().Length == 4 || JsonData.BetaVersionAvailable.Build > 1000)
+                        if (JsonData.BetaVersionAvailable.Build.ToString().Length == 4 || JsonData.BetaVersionAvailable.Build > 1000 && JsonData.BetaTestingActive == true)
                         {
                             // Beta testing is running.
                             if (JsonData.BetaVersionAvailable.Build > appVersion.Build)

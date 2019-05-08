@@ -7,8 +7,9 @@
   "BetaVersionAvailable": {
     "Major": 1,
     "Minor": 0,
-    "Build": 70
+    "Build": 7002
   },
+  "BetaTestingActive": "true",
   "JSONSource": "https://aka.ms/O365FiddlerExtensionJson",
   "InstallerURL": "https://aka.ms/O365FiddlerExtension",
   "WikiURL": "https://aka.ms/O365FiddlerExtensionWiki",
