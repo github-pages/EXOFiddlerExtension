@@ -62,7 +62,8 @@ namespace EXOFiddlerInspector
                     else
                     {
                         // Different version available found than what is currently running.
-                        FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.UpdateMessage", $"Update Available{Environment.NewLine}----------------" +
+                        FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.UpdateMessage", $"Update Information{Environment.NewLine}----------------" +
+                            $"{Environment.NewLine}You should update to the latest build available." +
                             $"{Environment.NewLine}Currently using version: v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}" +
                             $"{Environment.NewLine}New version available: v{JsonData.AppVersionAvailable.Major}.{JsonData.AppVersionAvailable.Minor}.{JsonData.AppVersionAvailable.Build}{Environment.NewLine} {Environment.NewLine}" +
                             $"Download the latest version: {Environment.NewLine}{Properties.Settings.Default.InstallerURL}{Environment.NewLine}{Environment.NewLine}");
@@ -79,7 +80,7 @@ namespace EXOFiddlerInspector
                             if (JsonData.BetaVersionAvailable.Build > appVersion.Build)
                             {
                                 // Newer Beta buld available.
-                                FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.UpdateMessage", $"Update Available{Environment.NewLine}----------------" +
+                                FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.UpdateMessage", $"Update Information{Environment.NewLine}----------------" +
                                     $"{Environment.NewLine}You should update to the newer beta build." +
                                     $"{Environment.NewLine}Currently using beta version: v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}" +
                                     $"{Environment.NewLine}New beta version available: v{JsonData.BetaVersionAvailable.Major}.{JsonData.BetaVersionAvailable.Minor}.{JsonData.BetaVersionAvailable.Build}" +
@@ -89,15 +90,16 @@ namespace EXOFiddlerInspector
                             else
                             {
                                 // Current Beta being used.
-                                FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.UpdateMessage", $"You are using a beta build. Thanks for the testing!{Environment.NewLine}" +
+                                FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.UpdateMessage", $"Update Information{Environment.NewLine}----------------" +
+                                    $"{Environment.NewLine}You're using the current beta build. Thanks for the testing!{Environment.NewLine}" +
                                     $"Currently using beta build: v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}{Environment.NewLine}" +
-                                    $"Newest production build available: v{JsonData.BetaVersionAvailable.Major}.{JsonData.BetaVersionAvailable.Minor}.{JsonData.BetaVersionAvailable.Build}");
+                                    $"Newest Beta build available: v{JsonData.BetaVersionAvailable.Major}.{JsonData.BetaVersionAvailable.Minor}.{JsonData.BetaVersionAvailable.Build}{Environment.NewLine}{Environment.NewLine}");
                             }
                         }
                         else
                         {
                             // Beta testing is not running.
-                            FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.UpdateMessage", $"Update Available{Environment.NewLine}----------------" +
+                            FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.UpdateMessage", $"Update Information{Environment.NewLine}----------------" +
                                 $"{Environment.NewLine}You should update from this beta build to the latest production build." +
                                 $"{Environment.NewLine}Currently using beta version: v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}" +
                                 $"{Environment.NewLine}New production version available: v{JsonData.AppVersionAvailable.Major}.{JsonData.AppVersionAvailable.Minor}.{JsonData.AppVersionAvailable.Build}" +
@@ -116,6 +118,8 @@ namespace EXOFiddlerInspector
         public void CheckForUpdate()
         {
             CheckForJsonUpdate();
+
+            return;
 
             Debug.WriteLine($"OFFICE 365 EXTENSION: {DateTime.Now}: CheckForAppUpdate.cs : CheckForUpdate begin.");
 
