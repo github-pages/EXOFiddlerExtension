@@ -10,7 +10,7 @@
     "Build": 70
   },
   "JSONSource": "https://aka.ms/O365FiddlerExtensionJson",
-  "InstallerURL": "https://aka.ms/O365FiddlerExtensionUpdateUrl",
+  "InstallerURL": "https://aka.ms/O365FiddlerExtension",
   "WikiURL": "https://aka.ms/O365FiddlerExtensionWiki",
   "ReportIssuesURL": "https://aka.ms/O365FiddlerExtensionIssues"
 }
