@@ -4,16 +4,53 @@ using Fiddler;
 using System.Xml;
 using System.Diagnostics;
 using EXOFiddlerInspector.Services;
+using Newtonsoft.Json;
 
 namespace EXOFiddlerInspector
 {
+    class JSONTypeClass
+    {
+        public ver AppVersionAvailable { get; set; }
+
+        public class ver
+        {
+            public string major { get; set; }
+            public string minor { get; set; }
+            public string build { get; set; }
+
+        }
+
+        public string JSONSource { get; set; }
+        public string InstallerURL { get; set; }
+        public string WikiURL { get; set; }
+        public string ReportIssuesURL { get; set; }
+
+    }
+
     class CheckForAppUpdate : ActivationService
     {
         private static CheckForAppUpdate _instance;
         public static CheckForAppUpdate Instance => _instance ?? (_instance = new CheckForAppUpdate());
 
+        public void CheckForJsonUpdate()
+        {
+            try
+            {
+                string strJson = "https://aka.ms/O365FiddlerExtensionJson";
+                var JSONApplicationData = JsonConvert.DeserializeObject<JSONTypeClass>(strJson);
+                Debug.WriteLine($"OFFICE 365 EXTENSION: {DateTime.Now}: CheckForAppUpdate.cs : " + JSONApplicationData.AppVersionAvailable.build);
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"OFFICE 365 EXTENSION: {DateTime.Now}: CheckForAppUpdate.cs : " + ex.Message);
+            }
+        }
+
         public void CheckForUpdate()
         {
+            CheckForJsonUpdate();
+
             Debug.WriteLine($"OFFICE 365 EXTENSION: {DateTime.Now}: CheckForAppUpdate.cs : CheckForUpdate begin.");
 
             string downloadUrl = "";

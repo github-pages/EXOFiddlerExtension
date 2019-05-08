@@ -1,12 +1,11 @@
 {
-  "Version" : 
+  "AppVersionAvailable" : 
   {
     "Major" : 1,
     "Minor" : 0,
     "Build" : 71
   },
-  "JSONSource": "https://aka.ms/O365FiddlerExtension/update.json",
-  "UpdateURL": "https://aka.ms/O365FiddlerExtensionUpdateCheckUrl",
+  "JSONSource": "https://aka.ms/O365FiddlerExtensionJson",
   "InstallerURL": "https://aka.ms/O365FiddlerExtensionUpdateUrl",
   "WikiURL": "https://aka.ms/O365FiddlerExtensionWiki",
   "ReportIssuesURL": "https://aka.ms/O365FiddlerExtensionIssues"

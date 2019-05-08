@@ -101,7 +101,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="update.json" />
+    <None Include="Update.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="update.xml" />
