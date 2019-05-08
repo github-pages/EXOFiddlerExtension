@@ -120,19 +120,19 @@ namespace EXOFiddlerInspector
         public void miWiki_Click(object sender, EventArgs e)
         {
             // Fire up a web browser to the project Wiki URL.
-            System.Diagnostics.Process.Start(Properties.Settings.Default.WikiURL);
+            System.Diagnostics.Process.Start(Preferences.WikiURL);
         }
 
         public void miReleasesDownloadWebpage_click(object sender, EventArgs e)
         {
             // Fire up a web browser to the project Wiki URL.
-            System.Diagnostics.Process.Start(Properties.Settings.Default.InstallerURL);
+            System.Diagnostics.Process.Start(Preferences.InstallerURL);
         }
 
         public void miReportIssues_Click(object sender, EventArgs e)
         {
             // Fire up a web browser to the project issues URL.
-            System.Diagnostics.Process.Start(Properties.Settings.Default.ReportIssuesURL);
+            System.Diagnostics.Process.Start(Preferences.ReportIssuesURL);
         }
 
         public void miCheckForUpdate_Click(object sender, EventArgs e)

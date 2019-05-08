@@ -22,50 +22,5 @@ namespace EXOFiddlerInspector.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://aka.ms/O365FiddlerExtensionUpdateCheckUrl")]
-        public string UpdateURL {
-            get {
-                return ((string)(this["UpdateURL"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://aka.ms/O365FiddlerExtensionUpdateUrl")]
-        public string InstallerURL {
-            get {
-                return ((string)(this["InstallerURL"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://aka.ms/O365FiddlerExtensionWiki")]
-        public string WikiURL {
-            get {
-                return ((string)(this["WikiURL"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://aka.ms/O365FiddlerExtensionIssues")]
-        public string ReportIssuesURL {
-            get {
-                return ((string)(this["ReportIssuesURL"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://aka.ms/O365FiddlerExtensionJson")]
-        public string UpdateJsonURL {
-            get {
-                return ((string)(this["UpdateJsonURL"]));
-            }
-        }
     }
 }
