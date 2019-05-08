@@ -116,6 +116,8 @@ namespace EXOFiddlerInspector
                     MessageBoxButtons buttons = MessageBoxButtons.YesNo;
                     DialogResult result;
 
+                    Debug.WriteLine($"OFFICE 365 EXTENSION: {DateTime.Now}: CheckForAppUpdate.cs : New Version Available. v{newVersion.Major}.{newVersion.Minor}.{newVersion.Build}");
+
                     //Display the MessageBox.
                     result = MessageBox.Show(message, caption, buttons, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
 
@@ -149,12 +151,17 @@ namespace EXOFiddlerInspector
                 if (Preferences.AppLoggingEnabled)
                 {
                     FiddlerApplication.Log.LogString("O365FiddlerExtention: Latest version installed.");
+                    Debug.WriteLine($"OFFICE 365 EXTENSION: {DateTime.Now}: CheckForAppUpdate.cs : Latest version installed.");
                 }
 
                 // Tell user if they are either on a beta build.
                 if (applicationVersion.Build >= 1000 && Preferences.ManualCheckForUpdate)
                 {
                     MessageBox.Show($"O365FiddlerExtention: You are using a beta build. Thanks for the testing!{Environment.NewLine}" +
+                        $"Currently using beta build: v{applicationVersion.Major}.{applicationVersion.Minor}.{applicationVersion.Build}{Environment.NewLine}" +
+                        $"Newest production build available: v{newVersion.Major}.{newVersion.Minor}.{newVersion.Build}", "O365 Fiddler Extension - Beta Version!");
+
+                    Debug.WriteLine($"OFFICE 365 EXTENSION: {DateTime.Now}: CheckForAppUpdate.cs : You are using a beta build. Thanks for the testing!{Environment.NewLine}" +
                         $"Currently using beta build: v{applicationVersion.Major}.{applicationVersion.Minor}.{applicationVersion.Build}{Environment.NewLine}" +
                         $"Newest production build available: v{newVersion.Major}.{newVersion.Minor}.{newVersion.Build}", "O365 Fiddler Extension - Beta Version!");
 
@@ -177,6 +184,10 @@ namespace EXOFiddlerInspector
                 else if (Preferences.ManualCheckForUpdate)
                 {
                     MessageBox.Show("O365FiddlerExtention: You already have the latest version installed." + Environment.NewLine +
+                        $"Currently using: v{applicationVersion.Major}.{applicationVersion.Minor}.{applicationVersion.Build}{Environment.NewLine}" +
+                        $"Newest available: v{newVersion.Major}.{newVersion.Minor}.{newVersion.Build}", "O365 Fiddler Extension");
+
+                    Debug.WriteLine($"OFFICE 365 EXTENSION: {DateTime.Now}: CheckForAppUpdate.cs :You already have the latest version installed." + Environment.NewLine +
                         $"Currently using: v{applicationVersion.Major}.{applicationVersion.Minor}.{applicationVersion.Build}{Environment.NewLine}" +
                         $"Newest available: v{newVersion.Major}.{newVersion.Minor}.{newVersion.Build}", "O365 Fiddler Extension");
                     // return this perference back to false, so we don't give this feedback unintentionally.
