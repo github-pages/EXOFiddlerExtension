@@ -5,6 +5,12 @@
     "Minor" : 0,
     "Build" : 71
   },
+  "BetaVersionAvailable" :
+  {
+  	  "Major": 1,
+	  "Minor": 0,
+	  "Build": 7001
+  },
   "JSONSource": "https://aka.ms/O365FiddlerExtensionJson",
   "InstallerURL": "https://aka.ms/O365FiddlerExtensionUpdateUrl",
   "WikiURL": "https://aka.ms/O365FiddlerExtensionWiki",

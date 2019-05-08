@@ -125,5 +125,38 @@ namespace EXOFiddlerInspector.Services
             set { _ManualCheckForUpdate = value; FiddlerApplication.Prefs.SetBoolPref("extensions.EXOFiddlerExtension.ManualCheckForUpdate", value); }
         }
 
+        public static string _JSONSource;
+        
+        public static string JSONSource
+        {
+            get => JSONSource = FiddlerApplication.Prefs.GetStringPref("extensions.EXOFiddlerExtension.JSONSource", "https://aka.ms/O365FiddlerExtensionUpdateUrl");
+            set { _JSONSource = value; FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.JSONSource", value); }
+        }
+
+        public static string _InstallerURL;
+
+        public static string InstallerURL
+        {
+            get => InstallerURL = FiddlerApplication.Prefs.GetStringPref("extensions.EXOFiddlerExtension.InstallerURL", "https://aka.ms/O365FiddlerExtensionUpdateUrl");
+            set { _InstallerURL = value; FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.InstallerURL", value); }
+        }
+
+        
+
+        public static string _WikiURL;
+
+        public static string WikiURL
+        {
+            get => WikiURL = FiddlerApplication.Prefs.GetStringPref("extensions.EXOFiddlerExtension.WikiURL", "https://aka.ms/O365FiddlerExtensionWiki");
+            set { _WikiURL = value; FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.WikiURL", value); }
+        }
+        
+        public static string _ReportIssuesURL;
+
+        public static string ReportIssuesURL
+        {
+            get => ReportIssuesURL = FiddlerApplication.Prefs.GetStringPref("extensions.EXOFiddlerExtension.ReportIssuesURL", "https://aka.ms/O365FiddlerExtensionIssues");
+            set { _ReportIssuesURL = value; FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.ReportIssuesURL", value); }
+        }
     }
 }

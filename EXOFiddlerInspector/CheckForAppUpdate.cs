@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using Fiddler;
 using System.Xml;
+using System.Net;
 using System.Diagnostics;
 using EXOFiddlerInspector.Services;
 using Newtonsoft.Json;
@@ -14,10 +15,19 @@ namespace EXOFiddlerInspector
 
         public class ver
         {
-            public string major { get; set; }
-            public string minor { get; set; }
-            public string build { get; set; }
+            public int Major { get; set; }
+            public int Minor { get; set; }
+            public int Build { get; set; }
 
+        }
+
+        public betaver BetaVersionAvailable { get; set; }
+
+        public class betaver
+        {
+            public int Major { get; set; }
+            public int Minor { get; set; }
+            public int Build { get; set; }
         }
 
         public string JSONSource { get; set; }
@@ -34,16 +44,72 @@ namespace EXOFiddlerInspector
 
         public void CheckForJsonUpdate()
         {
-            try
+            using (var WebClient = new WebClient())
             {
-                string strJson = "https://aka.ms/O365FiddlerExtensionJson";
-                var JSONApplicationData = JsonConvert.DeserializeObject<JSONTypeClass>(strJson);
-                Debug.WriteLine($"OFFICE 365 EXTENSION: {DateTime.Now}: CheckForAppUpdate.cs : " + JSONApplicationData.AppVersionAvailable.build);
+                try
+                {
+                    var json = WebClient.DownloadString(Properties.Settings.Default.UpdateJsonURL);
 
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"OFFICE 365 EXTENSION: {DateTime.Now}: CheckForAppUpdate.cs : " + ex.Message);
+                    var JsonData = JsonConvert.DeserializeObject<JSONTypeClass>(json);
+
+                    Version appVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+
+                    // PRODUCTION.
+                    if (JsonData.AppVersionAvailable.Major == appVersion.Major && JsonData.AppVersionAvailable.Minor == appVersion.Minor && JsonData.AppVersionAvailable.Build == appVersion.Build)
+                    {
+                        // Do nothing here, the available version and currently running version match. Ideal production scenario.
+                    }
+                    else
+                    {
+                        // Different version available found than what is currently running.
+                        FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.UpdateMessage", $"Update Available{Environment.NewLine}----------------" +
+                            $"{Environment.NewLine}Currently using version: v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}" +
+                            $"{Environment.NewLine}New version available: v{JsonData.AppVersionAvailable.Major}.{JsonData.AppVersionAvailable.Minor}.{JsonData.AppVersionAvailable.Build}{Environment.NewLine} {Environment.NewLine}" +
+                            $"Download the latest version: {Environment.NewLine}{Properties.Settings.Default.InstallerURL}{Environment.NewLine}{Environment.NewLine}");
+                    }
+
+                    // BETA.
+                    if (appVersion.Build.ToString().Length == 4 || appVersion.Build > 1000)
+                    {
+                        // Application version detected is a beta version.
+
+                        if (JsonData.BetaVersionAvailable.Build.ToString().Length == 4 || JsonData.BetaVersionAvailable.Build > 1000)
+                        {
+                            // Beta testing is running.
+                            if (JsonData.BetaVersionAvailable.Build > appVersion.Build)
+                            {
+                                // Newer Beta buld available.
+                                FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.UpdateMessage", $"Update Available{Environment.NewLine}----------------" +
+                                    $"{Environment.NewLine}You should update to the newer beta build." +
+                                    $"{Environment.NewLine}Currently using beta version: v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}" +
+                                    $"{Environment.NewLine}New beta version available: v{JsonData.BetaVersionAvailable.Major}.{JsonData.BetaVersionAvailable.Minor}.{JsonData.BetaVersionAvailable.Build}" +
+                                    $"{Environment.NewLine}{Environment.NewLine}" +
+                                    $"Download the latest version: {Environment.NewLine}{Properties.Settings.Default.InstallerURL}{Environment.NewLine}{Environment.NewLine}");
+                            }
+                            else
+                            {
+                                // Current Beta being used.
+                                FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.UpdateMessage", $"You are using a beta build. Thanks for the testing!{Environment.NewLine}" +
+                                    $"Currently using beta build: v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}{Environment.NewLine}" +
+                                    $"Newest production build available: v{JsonData.BetaVersionAvailable.Major}.{JsonData.BetaVersionAvailable.Minor}.{JsonData.BetaVersionAvailable.Build}");
+                            }
+                        }
+                        else
+                        {
+                            // Beta testing is not running.
+                            FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.UpdateMessage", $"Update Available{Environment.NewLine}----------------" +
+                                $"{Environment.NewLine}You should update from this beta build to the latest production build." +
+                                $"{Environment.NewLine}Currently using beta version: v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}" +
+                                $"{Environment.NewLine}New production version available: v{JsonData.AppVersionAvailable.Major}.{JsonData.AppVersionAvailable.Minor}.{JsonData.AppVersionAvailable.Build}" +
+                                $"{Environment.NewLine}{Environment.NewLine}" +
+                                $"Download the latest version: {Environment.NewLine}{Properties.Settings.Default.InstallerURL}{Environment.NewLine}{Environment.NewLine}");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
 

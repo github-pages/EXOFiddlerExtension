@@ -58,5 +58,14 @@ namespace EXOFiddlerInspector.Properties {
                 return ((string)(this["ReportIssuesURL"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://aka.ms/O365FiddlerExtensionJson")]
+        public string UpdateJsonURL {
+            get {
+                return ((string)(this["UpdateJsonURL"]));
+            }
+        }
     }
 }
