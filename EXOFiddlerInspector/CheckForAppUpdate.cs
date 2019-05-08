@@ -67,7 +67,7 @@ namespace EXOFiddlerInspector
                             $"{Environment.NewLine}New version available: v{JsonData.AppVersionAvailable.Major}.{JsonData.AppVersionAvailable.Minor}.{JsonData.AppVersionAvailable.Build}{Environment.NewLine} {Environment.NewLine}" +
                             $"Download the latest version: {Environment.NewLine}{Properties.Settings.Default.InstallerURL}{Environment.NewLine}{Environment.NewLine}");
                     }
-
+                    
                     // BETA.
                     if (appVersion.Build.ToString().Length == 4 || appVersion.Build > 1000)
                     {
