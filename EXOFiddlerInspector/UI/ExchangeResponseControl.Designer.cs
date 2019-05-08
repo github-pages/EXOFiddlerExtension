@@ -47,6 +47,7 @@
             this.ResultsDisplay.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.ResultsDisplay.Size = new System.Drawing.Size(558, 605);
             this.ResultsDisplay.TabIndex = 1;
+            this.ResultsDisplay.TextChanged += new System.EventHandler(this.ResultsDisplay_TextChanged);
             // 
             // ExchangeResponseControl
             // 

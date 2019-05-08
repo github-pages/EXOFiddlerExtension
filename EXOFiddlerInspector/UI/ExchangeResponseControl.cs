@@ -38,5 +38,14 @@ namespace EXOFiddlerInspector.UI
             FiddlerApplication.Prefs.RemovePref("extensions.EXOFiddlerExtension.HostIPColumnEnabled");
             FiddlerApplication.Prefs.RemovePref("extensions.EXOFiddlerExtension.AuthColumnEnabled");
         }
+
+        // Scroll to top of Inspector text control. Default is scroll to bottom.
+        // Want to highlight any update info as well as general info on session change.
+        private void ResultsDisplay_TextChanged(object sender, EventArgs e)
+        {
+            ResultsDisplay.SelectionStart = 0;
+            ResultsDisplay.ScrollToCaret();
+            ResultsDisplay.Refresh();
+        }
     }
 }
