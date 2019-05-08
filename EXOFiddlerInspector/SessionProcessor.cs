@@ -745,8 +745,34 @@ namespace EXOFiddlerInspector
                         this.session["ui-backcolor"] = HTMLColourGreen;
                         this.session["ui-color"] = "black";
 
-                        this.session["X-ResponseAlert"] = "Exchange On-Premise Autodiscover redirect to Exchange Online.";
-                        this.session["X-ResponseComments"] = "Exchange On-Premise Autodiscover redirect to Exchange Online.";
+                        // Check if this is Outlook or not.
+                        if (this.session["X-ProcessName"].Contains("outlook"))
+                        {
+                            // Check if this is an Exchange Online redirect.
+                            if (this.session.utilFindInRequest(".mail.onmicrosoft.com", false) > 1)
+                            {
+                                this.session["X-ResponseAlert"] = "Exchange Online Autodiscover redirect.";
+                                this.session["X-ResponseComments"] = "Exchange Online Autodiscover redirect. " + "" +
+                                    "Expect the response from this request to give the location https://autodiscover-s.outlook.com/autodiscover/autodiscover.xml." +
+                                    Environment.NewLine +
+                                    "Following that you should see a session with a HTTP 200 response from autodiscover-s.outlook.com with the large XML Autodiscover response from Exchange Online.";
+                            }
+                            // If we did not request to a '.mail.onmicrosoft.com' host in a HTTP 302, then this must be Exchange On-Premise.
+                            else
+                            {
+                                this.session["X-ResponseAlert"] = "Exchange On-Premise Autodiscover redirect to Exchange Online.";
+                                this.session["X-ResponseComments"] = "Exchange On-Premise Autodiscover redirect to Exchange Online.";
+                            }
+                            
+                        }
+                        // Its not Outlook, just throw a HTTP 302 general explanation.
+                        else
+                        {
+                            this.session["X-ResponseAlert"] = "HTTP 302 Found / redirect.";
+                            this.session["X-ResponseComments"] = "HTTP 302 Found / redirect. A typical response, where one server redirects to another.";
+                        }
+
+                        
 
                         if (Preferences.AppLoggingEnabled)
                         {
