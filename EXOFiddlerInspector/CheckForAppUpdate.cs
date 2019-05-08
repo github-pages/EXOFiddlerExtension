@@ -131,7 +131,45 @@ namespace EXOFiddlerInspector
                         }
                         
                     }
-                }
+
+                    // Regardless of extension enabled or not, give the user feedback when they click the 'Check For Update' menu item if no update is available.
+                    if (Preferences.ManualCheckForUpdate)
+                    {
+                        //MessageBox.Show("EXOFiddlerExtention: Update available. v" + newVersion.Major + "." + newVersion.Minor + "." + newVersion.Build + ".", "EXO Fiddler Extension");
+
+                        string message = $"You are currently using v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}{Environment.NewLine}" +
+                            $"A new version is available v{JsonData.AppVersionAvailable.Major}.{JsonData.AppVersionAvailable.Minor}.{JsonData.AppVersionAvailable.Build}{Environment.NewLine}" +
+                            "Do you want to download the update?";
+
+                        string caption = "O365 Fiddler Extension - Update Available";
+
+                        /// <remarks>
+                        /// Set menu title to show user there is an update available.
+                        /// </remarks>
+
+                        MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+                        DialogResult result;
+
+                        Debug.WriteLine($"OFFICE 365 EXTENSION: {DateTime.Now}: CheckForAppUpdate.cs : New Version Available. v{JsonData.AppVersionAvailable.Major}.{JsonData.AppVersionAvailable.Minor}.{JsonData.AppVersionAvailable.Build}");
+
+                        //Display the MessageBox.
+                        result = MessageBox.Show(message, caption, buttons, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+
+                        if (result == DialogResult.Yes)
+                        {
+                            // Execute the installer MSI URL, which will open in the user's default browser.
+                            System.Diagnostics.Process.Start(Preferences.InstallerURL);
+                            if (Preferences.AppLoggingEnabled)
+                            {
+                                FiddlerApplication.Log.LogString($"O365FiddlerExtention: Version installed. v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}");
+                                FiddlerApplication.Log.LogString($"O365FiddlerExtention: New Version Available. v{JsonData.AppVersionAvailable.Major}.{JsonData.AppVersionAvailable.Minor}.{JsonData.AppVersionAvailable.Build}");
+                            }
+                        }
+                        // return this perference back to false, so we don't give this feedback unintentionally.
+                        Preferences.ManualCheckForUpdate = false;
+                        //FiddlerApplication.Prefs.SetBoolPref("extensions.EXOFiddlerExtension.ManualCheckForUpdate", false);
+                        }
+                    }
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
