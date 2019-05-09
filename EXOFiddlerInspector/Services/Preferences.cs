@@ -37,7 +37,7 @@ namespace EXOFiddlerInspector.Services
         public static Task<bool> SetDefaultPreferences()
         {
             ExtensionEnabled = true;
-            AppLoggingEnabled = true;
+            //AppLoggingEnabled = true;
             HighlightOutlookOWAOnlyEnabled = true;
             IsLoadSaz = false;
             //ColumnsAllEnabled = true;
@@ -72,6 +72,7 @@ namespace EXOFiddlerInspector.Services
             }
         }
 
+        /*
         private static bool _appLoggingEnabled;
         public static bool AppLoggingEnabled
         {
@@ -83,6 +84,7 @@ namespace EXOFiddlerInspector.Services
                 MenuUI.Instance.miAppLoggingEnabled.Checked = AppLoggingEnabled;
             }
         }
+        */
 
         private static bool _highlightOutlookOWAOnlyEnabled;
         public static bool HighlightOutlookOWAOnlyEnabled
@@ -129,7 +131,7 @@ namespace EXOFiddlerInspector.Services
         
         public static string JSONSource
         {
-            get => JSONSource = FiddlerApplication.Prefs.GetStringPref("extensions.EXOFiddlerExtension.JSONSource", "https://aka.ms/O365FiddlerExtensionUpdateUrl");
+            get => JSONSource = FiddlerApplication.Prefs.GetStringPref("extensions.EXOFiddlerExtension.JSONSource", "https://aka.ms/O365FiddlerExtensionUpdateJson");
             set { _JSONSource = value; FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.JSONSource", value); }
         }
 

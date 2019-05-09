@@ -371,17 +371,16 @@ namespace EXOFiddlerInspector.Inspectors
                     if (ClientMilliseconds > SlowRunningSessionThreshold)
                     {
                         ResultsString.AppendLine("!Long running session!");
-                        if (Preferences.AppLoggingEnabled)
-                        {
+                        //if (Preferences.AppLoggingEnabled)
+                        //{
                             FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " Long running session.");
-                        }
+                        //}
                     }
-                    ResultsString.AppendLine();
                 }
                 else
                 {
                     ResultsString.AppendLine();
-                    ResultsString.AppendLine("Session does not contain data to calculate 'Elapsed Time'.");
+                    ResultsString.AppendLine("Session does not contain data to calculate 'Elapsed Time'.");   
                 }
 
                 /// <remarks>
@@ -421,10 +420,10 @@ namespace EXOFiddlerInspector.Inspectors
                     if (ServerMilliseconds > SlowRunningSessionThreshold)
                     {
                         ResultsString.AppendLine("!Long running EXO session!");
-                        if (Preferences.AppLoggingEnabled)
-                        {
+                        //if (Preferences.AppLoggingEnabled)
+                        //{
                             FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " Long running EXO session.");
-                        }
+                        //}
                     }
                     ResultsString.AppendLine();
                     ResultsString.AppendLine($"Transit Time: { Math.Round((this.session.Timers.ServerDoneResponse - this.session.Timers.ServerBeginResponse).TotalMilliseconds)} ms");

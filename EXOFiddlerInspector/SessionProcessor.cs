@@ -205,10 +205,10 @@ namespace EXOFiddlerInspector
 
                 this.session["X-SessionType"] = "!Apache Autodiscover!";
 
-                if (Preferences.AppLoggingEnabled)
-                {
+                //if (Preferences.AppLoggingEnabled)
+                //{
                     FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 405 Method Not Allowed; Apache is answering Autodiscover requests!");
-                }
+                //}
             }
             /////////////////////////////
             // If the above is not true, then drop into the switch statement based on individual response codes
@@ -234,10 +234,10 @@ namespace EXOFiddlerInspector
                         this.session["X-ResponseComments"] = "The quantity of these types of server errors need to be considered in context with what you are troubleshooting " +
                             "and whether these are relevant or not. A small number is probably not an issue, larger numbers of these could be cause for concern.";
 
-                        if (Preferences.AppLoggingEnabled)
-                        {
+                        //if (Preferences.AppLoggingEnabled)
+                        //{
                             FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 0 No response");
-                        }
+                        //}
 
                         //
                         /////////////////////////////
@@ -377,10 +377,10 @@ namespace EXOFiddlerInspector
                                     "This is what we want to see, the mail.onmicrosoft.com redirect address (you may know this as the target address or remote " +
                                     "routing address) from On-Premise sends Outlook to Office 365.";
 
-                                if (Preferences.AppLoggingEnabled)
-                                {
+                                //if (Preferences.AppLoggingEnabled)
+                                //{
                                     FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 200 Exchange On-Premise redirect address: " + RedirectAddress);
-                                }
+                                //}
                                 // Increment SkipFurtherProcess for SetSessionType function and return.
                                 SkipFurtherProcessing++;
 
@@ -402,10 +402,10 @@ namespace EXOFiddlerInspector
                                     Environment.NewLine +
                                     "If this is an Office 365 mailbox the targetAddress from On-Premise is not sending Outlook to Office 365!";
 
-                                if (Preferences.AppLoggingEnabled)
-                                {
+                                //if (Preferences.AppLoggingEnabled)
+                                //{
                                     FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 200 Exchange On-Premise AUTOD REDIRECT ADDR! : " + RedirectAddress);
-                                }
+                                //}
                                 // Increment SkipFurtherProcess for SetSessionType function and return.
                                 SkipFurtherProcessing++;
                             }
@@ -439,10 +439,10 @@ namespace EXOFiddlerInspector
                                 + "Look for other On-Premise Autodiscover responses, we may have a " +
                                 "valid Autodiscover targetAddress from On-Premise in another session in this trace.";
 
-                            if (Preferences.AppLoggingEnabled)
-                            {
+                            //if (Preferences.AppLoggingEnabled)
+                            //{
                                 FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 200 Exchange On-Premise redirect address. Error code 500: The email address can't be found.");
-                            }
+                            //}
                             // Increment SkipFurtherProcess for SetSessionType function and return.
                             SkipFurtherProcessing++;
                         }
@@ -640,10 +640,10 @@ namespace EXOFiddlerInspector
                                         Environment.NewLine +
                                         "Keyword 'Exception' found " + wordCountExceptionText;
 
-                                    if (Preferences.AppLoggingEnabled)
-                                    {
+                                    //if (Preferences.AppLoggingEnabled)
+                                    //{
                                         FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 200 FAILURE LURKING!");
-                                    }
+                                    //}
                                 }
                                 else
                                 {
@@ -668,10 +668,10 @@ namespace EXOFiddlerInspector
                                     this.session["X-ResponseAlert"] = "Undefined";
                                     this.session["X-ResponseComments"] = "Undefined";
 
-                                    if (Preferences.AppLoggingEnabled)
-                                    {
+                                    //if (Preferences.AppLoggingEnabled)
+                                    //{
                                         FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 200 ; 99 Undefined.");
-                                    }
+                                    //}
                                 }
                             }
                         }
@@ -689,10 +689,10 @@ namespace EXOFiddlerInspector
                         this.session["X-ResponseAlert"] = "HTTP 201 Created.";
                         this.session["X-ResponseComments"] = "Not expecting this to be anything which needs attention for troubleshooting.";
 
-                        if (Preferences.AppLoggingEnabled)
-                        {
+                        //if (Preferences.AppLoggingEnabled)
+                        //{
                             FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 201 Created.");
-                        }
+                        //}
                         //
                         /////////////////////////////
                         break;
@@ -709,10 +709,10 @@ namespace EXOFiddlerInspector
                         this.session["X-ResponseComments"] = "The quantity of these types of server errors need to be considered in context with what you are troubleshooting " +
                             "and whether these are relevant or not. A small number is probably not an issue, larger numbers of these could be cause for concern.";
 
-                        if (Preferences.AppLoggingEnabled)
-                        {
+                        //if (Preferences.AppLoggingEnabled)
+                        //{
                             FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 204 No content.");
-                        }
+                        //}
                         //
                         /////////////////////////////
                         break;
@@ -730,10 +730,10 @@ namespace EXOFiddlerInspector
                         this.session["X-ResponseAlert"] = "HTTP 301 Moved Permanently";
                         this.session["X-ResponseComments"] = "Nothing of concern here at this time.";
 
-                        if (Preferences.AppLoggingEnabled)
-                        {
+                        //if (Preferences.AppLoggingEnabled)
+                        //{
                             FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 301 Moved Permanently.");
-                        }
+                        //}
                         //
                         /////////////////////////////
                         break;
@@ -775,10 +775,10 @@ namespace EXOFiddlerInspector
 
                         
 
-                        if (Preferences.AppLoggingEnabled)
-                        {
+                        //if (Preferences.AppLoggingEnabled)
+                        //{
                             FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 302 Found / Redirect.");
-                        }
+                        //}
                         //
                         /////////////////////////////
                         break;
@@ -793,10 +793,10 @@ namespace EXOFiddlerInspector
                         this.session["X-ResponseAlert"] = "HTTP 304 Not Modified";
                         this.session["X-ResponseComments"] = "Nothing of concern here at this time.";
 
-                        if (Preferences.AppLoggingEnabled)
-                        {
+                        //if (Preferences.AppLoggingEnabled)
+                        //{
                             FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 304 Not modified.");
-                        }
+                        //}
                         //
                         /////////////////////////////
                         break;
@@ -825,10 +825,10 @@ namespace EXOFiddlerInspector
                                 "https://autodiscover-s.outlook.com/autodiscover/autodiscover.xml as expected." + Environment.NewLine +
                                 "Check the Headers or Raw tab and the Location to ensure the Autodiscover call is going to the correct place.";
 
-                            if (Preferences.AppLoggingEnabled)
-                            {
+                            //if (Preferences.AppLoggingEnabled)
+                            //{
                                 FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 307 On-Prem Temp Redirect - Unexpected location!");
-                            }
+                            //}
                         }
                         else
                         {
@@ -845,10 +845,10 @@ namespace EXOFiddlerInspector
                                 Environment.NewLine +
                                 "If this session is not for an Outlook process then the information above may not be relevant to the issue under investigation.";
                             
-                            if (Preferences.AppLoggingEnabled)
-                            {
+                            //if (Preferences.AppLoggingEnabled)
+                            //{
                                 FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 307 Temp Redirect.");
-                            }
+                            //}
                         }
                         //
                         /////////////////////////////
@@ -869,10 +869,10 @@ namespace EXOFiddlerInspector
                         this.session["X-ResponseAlert"] = "HTTP 401 Bad Request";
                         this.session["X-ResponseComments"] = "HTTP 401: Bad Request. Seeing 1 or 2 of these may not be an issue. Any more than this should be investiagted further.";
 
-                        if (Preferences.AppLoggingEnabled)
-                        {
+                        //if (Preferences.AppLoggingEnabled)
+                        //{
                             FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 400 Bad Request.");
-                        }
+                        //}
                         //
                         /////////////////////////////
                         break;
@@ -896,10 +896,10 @@ namespace EXOFiddlerInspector
                         // Increment SkipFurtherProcess for SetSessionType function and return.
                         SkipFurtherProcessing++;
 
-                        if (Preferences.AppLoggingEnabled)
-                        {
+                        //if (Preferences.AppLoggingEnabled)
+                        //{
                             FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 401 Auth Challenge.");
-                        }
+                        //}
                         //
                         /////////////////////////////
                         break;
@@ -921,10 +921,10 @@ namespace EXOFiddlerInspector
                                 "To fire this message a HTTP 403 response code was detected and 'Access Denied' was found in the response body." + Environment.NewLine +
                                 "Check the Raw and WebView tabs, do you see anything which indicates traffic is blocked?";
                             
-                            if (Preferences.AppLoggingEnabled)
-                            {
+                            //if (Preferences.AppLoggingEnabled)
+                            //{
                                 FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 403 Forbidden; Phrase 'Access Denied' found in response body. Web Proxy blocking traffic?");
-                            }
+                            //}
                             // Increment SkipFurtherProcess for SetSessionType function and return.
                             SkipFurtherProcessing++;
                         }
@@ -959,10 +959,10 @@ namespace EXOFiddlerInspector
                                     "Validate with: Get-Mailbox service-account@domain.com | FL Languages";
                             }
 
-                            if (Preferences.AppLoggingEnabled)
-                            {
+                            //if (Preferences.AppLoggingEnabled)
+                            //{
                                 FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 403 Forbidden.");
-                            }
+                            //}
                         }
                         //
                         /////////////////////////////
@@ -979,10 +979,10 @@ namespace EXOFiddlerInspector
                         this.session["X-ResponseComments"] = "The quantity of these types of server errors need to be considered in context with what you are troubleshooting " +
                             "and whether these are relevant or not. A small number is probably not an issue, larger numbers of these could be cause for concern.";
 
-                        if (Preferences.AppLoggingEnabled)
-                        {
+                        //if (Preferences.AppLoggingEnabled)
+                        //{
                             FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 404 Not found.");
-                        }
+                        //}
                         //
                         /////////////////////////////
                         break;
@@ -997,10 +997,10 @@ namespace EXOFiddlerInspector
                         this.session["X-ResponseAlert"] = "!HTTP 405: Method Not Allowed!";
                         this.session["X-ResponseComments"] = "HTTP 405: Method Not Allowed";
 
-                        if (Preferences.AppLoggingEnabled)
-                        {
+                        //if (Preferences.AppLoggingEnabled)
+                        //{
                             FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 405 Method not allowed.");
-                        }
+                        //}
                         //
                         /////////////////////////////
                         break;
@@ -1026,10 +1026,10 @@ namespace EXOFiddlerInspector
                             "Office365 traffic should be exempt from proxy authentication or better yet follow Microsoft's recommendation " +
                             "to bypass the proxy for Office365 traffic.";
                         
-                        if (Preferences.AppLoggingEnabled)
-                        {
+                        //if (Preferences.AppLoggingEnabled)
+                        //{
                             FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 407 Proxy Authentication Required.");
-                        }
+                        //}
                         //
                         /////////////////////////////
                         break;
@@ -1045,10 +1045,10 @@ namespace EXOFiddlerInspector
                         this.session["X-ResponseComments"] = "HTTP 429: These responses need to be taken into context with the rest of the sessions in the trace. " +
                             "A small number is probably not an issue, larger numbers of these could be cause for concern.";
 
-                        if (Preferences.AppLoggingEnabled)
-                        {
+                        //if (Preferences.AppLoggingEnabled)
+                        //{
                             FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 429 Too many requests.");
-                        }
+                        //}
                         //
                         /////////////////////////////
                         break;
@@ -1063,10 +1063,10 @@ namespace EXOFiddlerInspector
 
                         // Need comments.
 
-                        if (Preferences.AppLoggingEnabled)
-                        {
+                        //if (Preferences.AppLoggingEnabled)
+                        //{
                             FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 440.");
-                        }
+                        //}
                         /////////////////////////////
                         break;
                     case 456:
@@ -1093,10 +1093,10 @@ namespace EXOFiddlerInspector
                                 Environment.NewLine +
                                 "https://social.technet.microsoft.com/wiki/contents/articles/36101.office-365-enable-modern-authentication.aspx";
 
-                            if (Preferences.AppLoggingEnabled)
-                            {
+                            //if (Preferences.AppLoggingEnabled)
+                            //{
                                 FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 456 Multi-Factor Required!");
-                            }
+                            //}
                             // Increment SkipFurtherProcess for SetSessionType function and return.
                             SkipFurtherProcessing++;
                         }
@@ -1118,10 +1118,10 @@ namespace EXOFiddlerInspector
                                 Environment.NewLine +
                                 "https://social.technet.microsoft.com/wiki/contents/articles/36101.office-365-enable-modern-authentication.aspx";
                             
-                            if (Preferences.AppLoggingEnabled)
-                            {
+                            //if (Preferences.AppLoggingEnabled)
+                            //{
                                 FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 456 Multi-Factor Required!");
-                            }
+                            //}
                             // Increment SkipFurtherProcess for SetSessionType function and return.
                             SkipFurtherProcessing++;
                         }
@@ -1143,10 +1143,10 @@ namespace EXOFiddlerInspector
                                 Environment.NewLine +
                                 "https://social.technet.microsoft.com/wiki/contents/articles/36101.office-365-enable-modern-authentication.aspx";
 
-                            if (Preferences.AppLoggingEnabled)
-                            {
+                            //if (Preferences.AppLoggingEnabled)
+                            //{
                                 FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 456 Multi-Factor Required.");
-                            }
+                            //}
                         }
                         //
                         /////////////////////////////
@@ -1169,10 +1169,10 @@ namespace EXOFiddlerInspector
                         this.session["X-ResponseAlert"] = "!HTTP 500 Internal Server Error!";
                         this.session["X-ResponseComments"] = "HTTP 500 Internal Server Error";
 
-                        if (Preferences.AppLoggingEnabled)
-                        {
+                        //if (Preferences.AppLoggingEnabled)
+                        //{
                             FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 500 Internal Server Error.");
-                        }
+                        //}
                         //
                         /////////////////////////////
                         break;
@@ -1215,10 +1215,10 @@ namespace EXOFiddlerInspector
                             this.session["X-ResponseAlert"] = "False Positive";
                             this.session["X-ResponseComments"] = "Telemetry failing is unlikely the cause of Outlook / OWA connectivity or other issues.";
 
-                            if (Preferences.AppLoggingEnabled)
-                            {
+                            //if (Preferences.AppLoggingEnabled)
+                            //{
                                 FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 502 Bad Gateway. Telemetry False Positive.");
-                            }
+                            //}
                             // Increment SkipFurtherProcess for SetSessionType function and return.
                             SkipFurtherProcessing++;
                         }
@@ -1248,10 +1248,10 @@ namespace EXOFiddlerInspector
                                 Environment.NewLine +
                                 "To validate this above lookup the record, confirm it is a MX record and attempt to connect to the MX host on ports 25 and 443.";
 
-                            if (Preferences.AppLoggingEnabled)
-                            {
+                            //if (Preferences.AppLoggingEnabled)
+                            //{
                                 FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 502 Bad Gateway. EXO DNS False Positive.");
-                            }
+                            //}
                             // Increment SkipFurtherProcess for SetSessionType function and return.
                             SkipFurtherProcessing++;
                         }
@@ -1291,10 +1291,10 @@ namespace EXOFiddlerInspector
                                 "If you get a response on port 80 and no response on port 443, this is more than likely an Autodiscover VIP which by design redirects " +
                                 "requests to https://autodiscover-s.outlook.com/autodiscover/autodiscover.xml.";
 
-                            if (Preferences.AppLoggingEnabled)
-                            {
+                            //if (Preferences.AppLoggingEnabled)
+                            //{
                                 FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 502 Bad Gateway. O365 AutoD onmicrosoft.com False Positive.");
-                            }
+                            //}
                             // Increment SkipFurtherProcess for SetSessionType function and return.
                             SkipFurtherProcessing++;
                         }
@@ -1338,10 +1338,10 @@ namespace EXOFiddlerInspector
                                 "If you get a response on port 80 and no response on port 443, this is more than likely an Autodiscover VIP which by design " +
                                 "redirects requests to https://autodiscover-s.outlook.com/autodiscover/autodiscover.xml.";
 
-                            if (Preferences.AppLoggingEnabled)
-                            {
+                            //if (Preferences.AppLoggingEnabled)
+                            //{
                                 FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 502 Bad Gateway. Vanity domain AutoD False Positive.");
-                            }
+                            //}
                             // Increment SkipFurtherProcess for SetSessionType function and return.
                             SkipFurtherProcessing++;
                         }
@@ -1361,10 +1361,10 @@ namespace EXOFiddlerInspector
                             this.session["X-ResponseAlert"] = "!AUTODISCOVER!";
                             this.session["X-ResponseComments"] = "Autodiscover request detected, which failed.";
 
-                            if (Preferences.AppLoggingEnabled)
-                            {
+                            //if (Preferences.AppLoggingEnabled)
+                            //{
                                 FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 502 Bad Gateway. Exchange Autodiscover.");
-                            }
+                            //}
                             // Increment SkipFurtherProcess for SetSessionType function and return.
                             SkipFurtherProcessing++;
                         }
@@ -1383,10 +1383,10 @@ namespace EXOFiddlerInspector
                             this.session["X-ResponseComments"] = "Potential to cause the issue you are investigating. " +
                                 "Do you see expected responses beyond this session in the trace? Is this an Exchange On - Premise, Exchange Online or other device ?";
                             
-                            if (Preferences.AppLoggingEnabled)
-                            {
+                            //if (Preferences.AppLoggingEnabled)
+                            //{
                                 FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 502 Bad Gateway (99).");
-                            }
+                            //}
                         }
                         //
                         /////////////////////////////
@@ -1440,10 +1440,10 @@ namespace EXOFiddlerInspector
                                 "If any of these show the HTTP 503 Service Unavailable this confirms a consistent failure on the federation service." + Environment.NewLine +
                                 "If however you get the expected responses, this does not neccessarily mean the federation service / everything authentication is healthy. Further investigation is advised.";
 
-                            if (Preferences.AppLoggingEnabled)
-                            {
+                            //if (Preferences.AppLoggingEnabled)
+                            //{
                                 FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 503 Service Unavailable. FederatedStsUnreachable in response body!");
-                            }
+                            //}
                             // Increment SkipFurtherProcess for SetSessionType function and return.
                             SkipFurtherProcessing++;
                         }
@@ -1463,10 +1463,10 @@ namespace EXOFiddlerInspector
 
                             SkipFurtherProcessing++;
 
-                            if (Preferences.AppLoggingEnabled)
-                            {
+                            //if (Preferences.AppLoggingEnabled)
+                            //{
                                 FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 503 Service Unavailable (99).");
-                            }
+                            //}
                         }
                         //
                         /////////////////////////////
@@ -1494,10 +1494,10 @@ namespace EXOFiddlerInspector
 
                             SkipFurtherProcessing++;
 
-                            if (Preferences.AppLoggingEnabled)
-                            {
+                            //if (Preferences.AppLoggingEnabled)
+                            //{
                                 FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + "  HTTP 504 Gateway Timeout -- Internet Access Blocked.");
-                            }
+                            //}
                         }
 
                         /////////////////////////////
@@ -1515,10 +1515,10 @@ namespace EXOFiddlerInspector
 
                             SkipFurtherProcessing++;
 
-                            if (Preferences.AppLoggingEnabled)
-                            {
+                            //if (Preferences.AppLoggingEnabled)
+                            //{
                                 FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " HTTP 504 Gateway Timeout (99).");
-                            }
+                            //}
                             //
                             /////////////////////////////
                         }
@@ -1539,10 +1539,10 @@ namespace EXOFiddlerInspector
 
                         SkipFurtherProcessing++;
 
-                        if (Preferences.AppLoggingEnabled)
-                        {
+                        //if (Preferences.AppLoggingEnabled)
+                        //{
                             FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " Session undefined in extension.");
-                        }
+                        //}
                         break;
                         //
                         /////////////////////////////
@@ -1593,10 +1593,10 @@ namespace EXOFiddlerInspector
                 this.session["X-ResponseComments"] = "Long running session found. A small number of long running sessions in the < 10 " +
                     "seconds time frame have been seen on normal working scenarios. This does not necessary signify an issue.";
 
-                if (Preferences.AppLoggingEnabled)
-                {
+                //if (Preferences.AppLoggingEnabled)
+                //{
                     FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " Long running session.");
-                }
+                //}
             }
             // If the EXO server think time runs longer than 5,000ms or 5 seconds 
             //  AND this is not determined to be a false positive.
@@ -1611,10 +1611,10 @@ namespace EXOFiddlerInspector
                 this.session["X-ResponseComments"] = "Long running EXO session found. A small number of long running sessions in the < 10 " +
                     "seconds time frame have been seen on normal working scenarios. This does not necessary signify an issue.";
 
-                if (Preferences.AppLoggingEnabled)
-                {
+                //if (Preferences.AppLoggingEnabled)
+                //{
                     FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " Long running EXO session.");
-                }
+                //}
             }
             else
             {
@@ -2078,10 +2078,10 @@ namespace EXOFiddlerInspector
                     // than Outlook client auth capabilities. Other sessions are expected to show client auth capabilities.
                     OverrideFurtherAuthChecking = true;
 
-                    if (Preferences.AppLoggingEnabled)
-                    {
+                    //if (Preferences.AppLoggingEnabled)
+                    //{
                         FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " EXO Modern Auth Disabled.");
-                    }
+                    //}
                 }
                 else
                 {
@@ -2098,10 +2098,10 @@ namespace EXOFiddlerInspector
                     this.session["X-AuthenticationDesc"] = this.session["X-ProcessName"] + " is stating it is Modern Authentication capable. " +
                         "Whether it is used or not will depend on whether Modern Authentication is enabled in the Office 365 service.";
 
-                    if (Preferences.AppLoggingEnabled)
-                    {
+                    //if (Preferences.AppLoggingEnabled)
+                    //{
                         FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " Client Modern Auth.");
-                    }
+                    //}
                 }
                 // If the session request header Authorization equals Basic this is a Basic Auth capable client.
                 // Note OverrideFurtherAuthChecking which is set above if we detected EXO has Modern Auth disabled.
@@ -2116,10 +2116,10 @@ namespace EXOFiddlerInspector
                         "which does not support Modern Authentication." +
                         "MutiFactor Authentication will not work as expected with Basic Authentication only capable Outlook clients";
 
-                    if (Preferences.AppLoggingEnabled)
-                    {
+                    //if (Preferences.AppLoggingEnabled)
+                    //{
                         FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " Outlook Basic Auth.");
-                    }
+                    //}
                 }
             }
             // Now we can check for Authorization headers which contain Bearer or Basic, signifying security tokens are being passed
@@ -2134,10 +2134,10 @@ namespace EXOFiddlerInspector
 
                 this.session["X-AuthenticationDesc"] = this.session["X-ProcessName"] + " accessing resources with a Modern Authentication security token.";
 
-                if (Preferences.AppLoggingEnabled)
-                {
+                //if (Preferences.AppLoggingEnabled)
+                //{
                     FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " Modern Auth Token.");
-                }
+                //}
             }
             // Basic == Basic Authentication.
             else if (this.session.oRequest["Authorization"].Contains("Basic"))
@@ -2148,10 +2148,10 @@ namespace EXOFiddlerInspector
 
                 this.session["X-AuthenticationDesc"] = this.session["X-ProcessName"] + " accessing resources with a Basic Authentication security token.";
 
-                if (Preferences.AppLoggingEnabled)
-                {
+                //if (Preferences.AppLoggingEnabled)
+                //{
                     FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " Basic Auth Token.");
-                }
+                //}
             }
             else
             {

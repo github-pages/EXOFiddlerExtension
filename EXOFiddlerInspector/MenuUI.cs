@@ -19,7 +19,7 @@ namespace EXOFiddlerInspector
 
         public MenuItem miEnabled { get; set; }
 
-        public MenuItem miAppLoggingEnabled { get; set; }
+        //public MenuItem miAppLoggingEnabled { get; set; }
 
         public MenuItem miCheckForUpdate { get; set; }
 
@@ -57,8 +57,8 @@ namespace EXOFiddlerInspector
                 //this.miSeperator2 = new MenuItem("-");
                 //this.miSeperator2.Index = 3;
 
-                this.miAppLoggingEnabled = new MenuItem("Application &Logging Enabled", new System.EventHandler(this.miAppLoggingEnabled_Click));
-                this.miAppLoggingEnabled.Checked = Preferences.AppLoggingEnabled;
+                //this.miAppLoggingEnabled = new MenuItem("Application &Logging Enabled", new System.EventHandler(this.miAppLoggingEnabled_Click));
+                //this.miAppLoggingEnabled.Checked = Preferences.AppLoggingEnabled;
 
                 this.miHighlightOutlookOWAOnly = new MenuItem("&Highlight Outlook and OWA Only", new System.EventHandler(this.miHighlightOutlookOWAOnly_click));
                 this.miHighlightOutlookOWAOnly.Checked = Preferences.HighlightOutlookOWAOnlyEnabled;
@@ -74,7 +74,7 @@ namespace EXOFiddlerInspector
                 // Add menu items to top level menu.
                 this.ExchangeOnlineTopMenu.MenuItems.AddRange(new MenuItem[] { this.miEnabled,
                 new MenuItem("-"),
-                this.miAppLoggingEnabled,
+                //this.miAppLoggingEnabled,
                 this.miHighlightOutlookOWAOnly,
                 new MenuItem("-"),
                 this.miReleasesDownloadWebpage,
@@ -108,7 +108,7 @@ namespace EXOFiddlerInspector
 
         }
 
-
+        /*
         public void miAppLoggingEnabled_Click(object sender, EventArgs e)
         {
             // Invert selection when this menu item is clicked.
@@ -116,6 +116,7 @@ namespace EXOFiddlerInspector
             // Match boolean variable on whether app logging is enabled or not.
             Preferences.AppLoggingEnabled = miAppLoggingEnabled.Checked;
         }
+        */
 
         public void miWiki_Click(object sender, EventArgs e)
         {
@@ -145,7 +146,7 @@ namespace EXOFiddlerInspector
             // Check for app update.
             //CheckForAppUpdate calledCheckForAppUpdate = new CheckForAppUpdate();
             //calledCheckForAppUpdate.CheckForUpdate();
-            CheckForAppUpdate.Instance.CheckForUpdate();
+            CheckForAppUpdate.Instance.CheckForJsonUpdate();
         }
 
         public void miHighlightOutlookOWAOnly_click(object sender, EventArgs e)
