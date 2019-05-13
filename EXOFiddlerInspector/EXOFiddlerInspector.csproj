@@ -101,6 +101,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="Ruleset.json" />
     <None Include="Update.json" />
   </ItemGroup>
   <ItemGroup>

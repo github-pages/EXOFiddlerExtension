@@ -160,5 +160,21 @@ namespace EXOFiddlerInspector.Services
             get => ReportIssuesURL = FiddlerApplication.Prefs.GetStringPref("extensions.EXOFiddlerExtension.ReportIssuesURL", "https://aka.ms/O365FiddlerExtensionIssues");
             set { _ReportIssuesURL = value; FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.ReportIssuesURL", value); }
         }
+
+        public static string _RulesetURL;
+
+        public static string RulesetURL
+        {
+            get => RulesetURL = FiddlerApplication.Prefs.GetStringPref("extensions.EXOFiddlerExtension.RulesetURL", "https://aka.ms/O365FiddlerExtensionRulesetURL");
+            set { _RulesetURL = value; FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.RulesetURL", value); }
+        }
+
+        public static string _DebugRulesetURL;
+
+        public static string DebugRulesetURL
+        {
+            get => DebugRulesetURL = FiddlerApplication.Prefs.GetStringPref("extensions.EXOFiddlerExtension.DebugRulesetURL", "https://aka.ms/O365FiddlerExtensionDebugRulesetURL");
+            set { _DebugRulesetURL = value; FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.DebugRulesetURL", value); }
+        }
     }
 }

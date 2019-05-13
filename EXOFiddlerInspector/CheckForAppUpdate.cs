@@ -205,5 +205,113 @@ namespace EXOFiddlerInspector
             }
         }
 
+
+        public void CheckForRuleSetUpdate()
+        {
+            // 1. Get the local json file for rules if there is one.
+
+            string LocalJsonData = "";
+            string LocalJsonDataFilePath = "";
+
+            string WebJsonData = "";
+
+            // If debugger is running, get the debug ruleset.
+            if (Preferences.GetDeveloperMode())
+            {
+                try
+                {
+                    var updatejsonfile = @"%USERPROFILE%\Documents\Fiddler2\DebugRuleSet.json";
+                    LocalJsonDataFilePath = Environment.ExpandEnvironmentVariables(updatejsonfile);
+
+                    LocalJsonData = System.IO.File.ReadAllText(LocalJsonDataFilePath);
+
+                    FiddlerApplication.Log.LogString($"O365FiddlerExtention: Get local ruleset {LocalJsonDataFilePath}");
+                }
+                catch (Exception ex)
+                {
+                    FiddlerApplication.Log.LogString($"O365FiddlerExtention: Get debug local ruleset. {ex.Message}.");
+                }
+                
+            }
+            // Otherwise this is a production session, get the regular ruleset.
+            else
+            {
+                try
+                {
+                    var updatejsonfile = @"%USERPROFILE%\Documents\Fiddler2\RuleSet.json";
+                    LocalJsonDataFilePath = Environment.ExpandEnvironmentVariables(updatejsonfile);
+
+                    LocalJsonData = System.IO.File.ReadAllText(LocalJsonDataFilePath);
+
+                    FiddlerApplication.Log.LogString($"O365FiddlerExtention: Get local ruleset {LocalJsonDataFilePath}");
+                }
+                catch (Exception ex)
+                {
+                    FiddlerApplication.Log.LogString($"O365FiddlerExtention: Get local ruleset. {ex.Message}.");
+                }
+                
+            }
+
+            // 2. Get the latest json ruleset from the web.
+            using (var WebClient = new WebClient())
+            {
+
+                // If debugger is running, get the debug ruleset.
+                if (Preferences.GetDeveloperMode())
+                {
+                    try
+                    {
+                        WebJsonData = WebClient.DownloadString(Preferences.DebugRulesetURL);
+
+                        FiddlerApplication.Log.LogString($"O365FiddlerExtention: Get debug web ruleset {Preferences.DebugRulesetURL}");
+
+                    }
+                    catch (Exception ex)
+                    {
+                        FiddlerApplication.Log.LogString($"O365FiddlerExtention: Get debug web ruleset. {ex.Message}.");
+                    }
+                }
+                // Otherwise this is a production session, get the regular ruleset.
+                else
+                {
+                    try
+                    {
+                        WebJsonData = WebClient.DownloadString(Preferences.RulesetURL);
+
+                        FiddlerApplication.Log.LogString($"O365FiddlerExtention: Get web ruleset {Preferences.RulesetURL}");
+                    }
+                    catch (Exception ex)
+                    {
+                        FiddlerApplication.Log.LogString($"O365FiddlerExtention: Get web ruleset. {ex.Message}.");
+                    }
+                }
+                
+            }
+
+            // 3. Compare the two, if newer on the web write this to the local.
+
+            // If the locally stored Json does not equal what is available online update the ruleset.
+            if (LocalJsonData != WebJsonData)
+            {
+                try
+                {
+                    using (System.IO.StreamWriter writefile = new System.IO.StreamWriter(LocalJsonDataFilePath))
+                    {
+                        writefile.Write(WebJsonData);
+
+                        FiddlerApplication.Log.LogString($"O365FiddlerExtention: Write web ruleset to local json file {LocalJsonDataFilePath}.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    FiddlerApplication.Log.LogString($"O365FiddlerExtention: Write web ruleset to local json file. {ex.Message}.");
+                }
+                
+            }
+
+            
+
+        }
+
     }
 }
