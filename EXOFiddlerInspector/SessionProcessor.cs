@@ -7,9 +7,16 @@ using System.Net;
 using System.Collections.Generic;
 using System.Diagnostics;
 using EXOFiddlerInspector.Services;
+using Newtonsoft.Json;
 
 namespace EXOFiddlerInspector
 {
+    public class JsonRulesetType
+    {
+        public string HTTP0 { get; set; }
+
+    }
+
     public class SessionProcessor : ActivationService
     {
         private static SessionProcessor _instance;
@@ -163,6 +170,32 @@ namespace EXOFiddlerInspector
             int wordCountFailed = 0;
             int wordCountException = 0;
 
+            //var JsonRuleset = JsonConvert.DeserializeObject<JsonRulesetType>(LocalJsonData);
+
+            //var JsonRuleset = JsonConvert.DeserializeObject<CheckForAppUpdate.Instance.CheckForRuleSetUpdate.JsonRuleset>(CheckForAppUpdate.Instance.CheckForRuleSetUpdate.);
+
+            string LocalJsonData = "";
+            string LocalJsonDataFilePath = "";
+
+            // if we wrote an update to the local Json data file, refresh the data from the file, so we use the latest version 
+            // to use in this session.
+            if (Preferences.GetDeveloperMode())
+            {
+                var updatejsonfile = @"%USERPROFILE%\Documents\Fiddler2\DebugRuleSet.json";
+                LocalJsonDataFilePath = Environment.ExpandEnvironmentVariables(updatejsonfile);
+
+                LocalJsonData = System.IO.File.ReadAllText(LocalJsonDataFilePath);
+            }
+            else
+            {
+                var updatejsonfile = @"%USERPROFILE%\Documents\Fiddler2\RuleSet.json";
+                LocalJsonDataFilePath = Environment.ExpandEnvironmentVariables(updatejsonfile);
+
+                LocalJsonData = System.IO.File.ReadAllText(LocalJsonDataFilePath);
+            }
+
+            var JsonRuleset = JsonConvert.DeserializeObject<JsonRulesetType>(LocalJsonData);
+
             #region ColouriseSessionsSwitchStatement
             /////////////////////////////
             //
@@ -255,12 +288,17 @@ namespace EXOFiddlerInspector
                         // 200.1. Connect Tunnel.
                         if (this.session.isTunnel == true)
                         {
+                            FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + JsonRuleset.HTTP0.ToString());
+                            JsonRuleset.HTTP0.ToString();
+
+                            //(JsonRuleset.HTTP0);
+
                             // Skip 99 response body word split and keyword search with Linq code.
                             // Mark as green, not expecting to find anything noteworthy in these sessions.
-                            this.session["ui-backcolor"] = HTMLColourGreen;
-                            this.session["ui-color"] = "black";
+                            //this.session["ui-backcolor"] = HTMLColourGreen;
+                            //this.session["ui-color"] = "black";
 
-                            this.session["X-SessionType"] = "Connect Tunnel";
+                            //this.session["X-SessionType"] = "Connect Tunnel";
 
                             // Increment SkipFurtherProcess for SetSessionType function and return.
                             SkipFurtherProcessing++;

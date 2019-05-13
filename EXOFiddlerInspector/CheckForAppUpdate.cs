@@ -200,11 +200,10 @@ namespace EXOFiddlerInspector
                 }
                 catch (Exception ex)
                 {
-                    FiddlerApplication.Log.LogString($"O365FiddlerExtention: Update check exception. {ex.Message}.");
+                    FiddlerApplication.Log.LogString($"O365FiddlerExtention: Exception: Update check. {ex.Message}.");
                 }
             }
         }
-
 
         public void CheckForRuleSetUpdate()
         {
@@ -229,7 +228,7 @@ namespace EXOFiddlerInspector
                 }
                 catch (Exception ex)
                 {
-                    FiddlerApplication.Log.LogString($"O365FiddlerExtention: Get debug local ruleset. {ex.Message}.");
+                    FiddlerApplication.Log.LogString($"O365FiddlerExtention: Exception: Get debug local ruleset. {ex.Message}.");
                 }
                 
             }
@@ -247,7 +246,7 @@ namespace EXOFiddlerInspector
                 }
                 catch (Exception ex)
                 {
-                    FiddlerApplication.Log.LogString($"O365FiddlerExtention: Get local ruleset. {ex.Message}.");
+                    FiddlerApplication.Log.LogString($"O365FiddlerExtention: Exception: Get local ruleset. {ex.Message}.");
                 }
                 
             }
@@ -268,7 +267,7 @@ namespace EXOFiddlerInspector
                     }
                     catch (Exception ex)
                     {
-                        FiddlerApplication.Log.LogString($"O365FiddlerExtention: Get debug web ruleset. {ex.Message}.");
+                        FiddlerApplication.Log.LogString($"O365FiddlerExtention: Exception: Get debug web ruleset. {ex.Message}.");
                     }
                 }
                 // Otherwise this is a production session, get the regular ruleset.
@@ -282,7 +281,7 @@ namespace EXOFiddlerInspector
                     }
                     catch (Exception ex)
                     {
-                        FiddlerApplication.Log.LogString($"O365FiddlerExtention: Get web ruleset. {ex.Message}.");
+                        FiddlerApplication.Log.LogString($"O365FiddlerExtention: Exception: Get web ruleset. {ex.Message}.");
                     }
                 }
                 
@@ -300,16 +299,20 @@ namespace EXOFiddlerInspector
                         writefile.Write(WebJsonData);
 
                         FiddlerApplication.Log.LogString($"O365FiddlerExtention: Write web ruleset to local json file {LocalJsonDataFilePath}.");
+                        
                     }
                 }
                 catch (Exception ex)
                 {
-                    FiddlerApplication.Log.LogString($"O365FiddlerExtention: Write web ruleset to local json file. {ex.Message}.");
+                    FiddlerApplication.Log.LogString($"O365FiddlerExtention: Exception: Write web ruleset to local json file. {ex.Message}.");
                 }
                 
             }
-
-            
+            // Local file and what is available on the web match.
+            else
+            {
+                FiddlerApplication.Log.LogString($"O365FiddlerExtention: Local and web web ruleset match. No ruleset update action needed.");
+            }
 
         }
 
