@@ -28,9 +28,20 @@ namespace EXOFiddlerInspector.Services
 
             SessionProcessor.Instance.Initialize();
 
-            CheckForAppUpdate.Instance.CheckForJsonUpdate();
+            // Check for app updates, as long as web calls are allowed.
+            if (!(Preferences.NeverWebCall))
+            {
+                CheckForAppUpdate.Instance.CheckForJsonUpdate();
+            }
 
-            CheckForAppUpdate.Instance.CheckForRuleSetUpdate();
+            // Check for rule set updates, as long as web calls are allowed.
+            if (!(Preferences.NeverWebCall))
+            {
+                CheckForAppUpdate.Instance.CheckForRuleSetUpdate();
+            }
+
+            // Set LoadSazFileName to null. Will be populated by Handleloadsaz function in SessionProcessor.cs if LoadSaz event occurs.
+            Preferences.LoadSazFileName = null;
 
             FiddlerApplication.UI.lvSessions.AddBoundColumn("Elapsed Time", 110, "X-ElapsedTime");
             FiddlerApplication.UI.lvSessions.AddBoundColumn("Session Type", 150, "X-SessionType");
@@ -45,7 +56,12 @@ namespace EXOFiddlerInspector.Services
             }
             else
             {
-                await TelemetryService.InitializeAsync();
+                // Call into extension telemetry service if web calls are allowed.
+                if (!(Preferences.NeverWebCall))
+                {
+                    await TelemetryService.InitializeAsync();
+                }
+                
             }
         }
 
@@ -111,7 +127,7 @@ namespace EXOFiddlerInspector.Services
         //        FiddlerApplication.UI.lvSessions.BeginUpdate();
 
         //        // Only on LoadSAZ add all the columns.
-        //        if (FiddlerApplication.Prefs.GetBoolPref("extensions.EXOFiddlerExtension.LoadSaz", false))
+        //        if (FiddlerApplication.Prefs.GetBoolPref("extensions.O365FiddlerExtension.LoadSaz", false))
         //        {
         //            FiddlerApplication.UI.lvSessions.AddBoundColumn("Elapsed Time", 110, "X-ElapsedTime");
         //            FiddlerApplication.UI.lvSessions.AddBoundColumn("Response Server", 0, 130, "X-ResponseServer");

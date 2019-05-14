@@ -1,3 +1,4 @@
 {
+  "LastUpdateDate": "2019-05-14",
   "HTTP0": "this.session[\"ui-backcolor\"] = HTMLColourRed; this.session[\"ui-color\"] = \"black\"; this.session[\"X-SessionType\"] = \"!NO RESPONSE!\"; this.session[\"X-ResponseAlert\"] = \"!HTTP 0 No Response!\"; this.session[\"X-ResponseComments\"] = \"The quantity of these types of server errors need to be considered in context with what you are troubleshooting and whether these are relevant or not. A small number is probably not an issue, larger numbers of these could be cause for concern.\"; FiddlerApplication.Log.LogString(\"EXOFiddlerExtention: \" + this.session.id + \" HTTP 0 No response\");"
 }

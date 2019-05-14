@@ -92,14 +92,14 @@ namespace EXOFiddlerInspector
                             Preferences.ManualCheckForUpdate = false;
                         }
                         // Clear the update message.
-                        FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.UpdateMessage","");
+                        FiddlerApplication.Prefs.SetStringPref("extensions.O365FiddlerExtension.UpdateMessage","");
 
                         FiddlerApplication.Log.LogString($"O365FiddlerExtention: Latest version installed. v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}");
                     }
                     else
                     {
                         // Different version available found than what is currently running.
-                        FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.UpdateMessage", $"Update Information{Environment.NewLine}----------------" +
+                        FiddlerApplication.Prefs.SetStringPref("extensions.O365FiddlerExtension.UpdateMessage", $"Update Information{Environment.NewLine}----------------" +
                             $"{Environment.NewLine}You should update to the latest version available." +
                             $"{Environment.NewLine}New version available: v{JsonData.AppVersionAvailable.Major}.{JsonData.AppVersionAvailable.Minor}.{JsonData.AppVersionAvailable.Build}" +
                             $"{Environment.NewLine}Currently using: v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}{Environment.NewLine}{Environment.NewLine}" +
@@ -142,7 +142,7 @@ namespace EXOFiddlerInspector
                             }
                             // return this perference back to false, so we don't give this feedback unintentionally.
                             Preferences.ManualCheckForUpdate = false;
-                            //FiddlerApplication.Prefs.SetBoolPref("extensions.EXOFiddlerExtension.ManualCheckForUpdate", false);
+                            //FiddlerApplication.Prefs.SetBoolPref("extensions.O365FiddlerExtension.ManualCheckForUpdate", false);
                         }
 
                     }
@@ -160,7 +160,7 @@ namespace EXOFiddlerInspector
                                 if (JsonData.BetaVersionAvailable.Build > appVersion.Build)
                                 {
                                     // Newer Beta buld available.
-                                    FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.UpdateMessage", $"Update Information{Environment.NewLine}----------------" +
+                                    FiddlerApplication.Prefs.SetStringPref("extensions.O365FiddlerExtension.UpdateMessage", $"Update Information{Environment.NewLine}----------------" +
                                         $"{Environment.NewLine}You should update to the newer beta build." +
                                         $"{Environment.NewLine}Currently using BETA: v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}" +
                                         $"{Environment.NewLine}New BETA version available: v{JsonData.BetaVersionAvailable.Major}.{JsonData.BetaVersionAvailable.Minor}.{JsonData.BetaVersionAvailable.Build}" +
@@ -172,7 +172,7 @@ namespace EXOFiddlerInspector
                                 else
                                 {
                                     // Current Beta being used.
-                                    FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.UpdateMessage", $"Update Information{Environment.NewLine}----------------" +
+                                    FiddlerApplication.Prefs.SetStringPref("extensions.O365FiddlerExtension.UpdateMessage", $"Update Information{Environment.NewLine}----------------" +
                                         $"{Environment.NewLine}You're using the current beta build. Thanks for the testing!{Environment.NewLine}" +
                                         $"Currently using beta build: v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}{Environment.NewLine}" +
                                         $"Newest Beta build available: v{JsonData.BetaVersionAvailable.Major}.{JsonData.BetaVersionAvailable.Minor}.{JsonData.BetaVersionAvailable.Build}{Environment.NewLine}{Environment.NewLine}");
@@ -182,7 +182,7 @@ namespace EXOFiddlerInspector
                             else
                             {
                                 // Beta testing is NOT running.
-                                FiddlerApplication.Prefs.SetStringPref("extensions.EXOFiddlerExtension.UpdateMessage", $"Update Information{Environment.NewLine}----------------" +
+                                FiddlerApplication.Prefs.SetStringPref("extensions.O365FiddlerExtension.UpdateMessage", $"Update Information{Environment.NewLine}----------------" +
                                     $"{Environment.NewLine}BETA testing NOT currently running." +
                                     $"{Environment.NewLine}You should update from this beta build to the latest production build" +
                                     $"{Environment.NewLine}Currently using beta version: v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}" +

@@ -13,6 +13,7 @@ namespace EXOFiddlerInspector
 {
     public class JsonRulesetType
     {
+        public string LastUpdateDate { get; set; }
         public string HTTP0 { get; set; }
 
     }
@@ -46,6 +47,10 @@ namespace EXOFiddlerInspector
             FiddlerApplication.OnLoadSAZ += HandleLoadSaz;
 
             FiddlerApplication.OnSaveSAZ += HandleSaveSaz;
+
+            FiddlerApplication.FiddlerAttach += HandleFiddlerAttach;
+
+            FiddlerApplication.FiddlerDetach += HandleFiddlerDetach;
 
             if (!IsInitialized)
             {
@@ -106,6 +111,20 @@ namespace EXOFiddlerInspector
         }
         #endregion
 
+        // Event handler so the extension knows whether Fiddler is attached as the system proxy or not.
+        // Used when deciding whether to write the SAZ file name into the inspector tab data or not.
+        private void HandleFiddlerAttach()
+        {
+            Preferences.FiddlerAttached = true;
+        }
+
+        // Event handler so the extension knows whether Fiddler is attached as the system proxy or not.
+        // Used when deciding whether to write the SAZ file name into the inspector tab data or not.
+        private void HandleFiddlerDetach()
+        {
+            Preferences.FiddlerAttached = false;
+        }
+
         #region LoadSAZ
         /// <summary>
         /// Handle loading a SAZ file.
@@ -117,6 +136,17 @@ namespace EXOFiddlerInspector
             FiddlerApplication.UI.lvSessions.BeginUpdate();
 
             Preferences.IsLoadSaz = true;
+
+            // Since we loaded a Saz file, save the file name to a preference, discard the path.
+            try
+            {
+                int LastSlash = e.sFilename.LastIndexOf("\\");
+                Preferences.LoadSazFileName = e.sFilename.Substring(LastSlash + 1);
+            }
+            catch (Exception ex)
+            {
+                FiddlerApplication.Log.LogString($"O365FiddlerExtention: Exception: Write LoadSaz FileName. {ex.Message}.");
+            }
             
             // HandleLoadSaz function was enabling the extension. 
             // The drawback to this is that if the extension is disabled and a loadsaz event occurs the extension is re-enabled. This may not be what the user wants.
@@ -1462,7 +1492,7 @@ namespace EXOFiddlerInspector
                             this.session["X-SessionType"] = "!FEDERATION!";
 
                             string RealmURL = "https://login.microsoftonline.com/GetUserRealm.srf?Login=" + this.session.oRequest["X-User-Identity"] + "&xml=1";
-                            if (FiddlerApplication.Prefs.GetBoolPref("extensions.EXOFiddlerExtension.DemoMode", false) == true)
+                            if (FiddlerApplication.Prefs.GetBoolPref("extensions.O365FiddlerExtension.DemoMode", false) == true)
                             {
                                 RealmURL = "https://login.microsoftonline.com/GetUserRealm.srf?Login=user@contoso.com&xml=1";
                             }
@@ -1656,7 +1686,7 @@ namespace EXOFiddlerInspector
             }
             else
             {
-                //bHighlightOutlookOWAOnlyEnabled = FiddlerApplication.Prefs.GetBoolPref("extensions.EXOFiddlerExtension.HighlightOutlookOWAOnlyEnabled", false);
+                //bHighlightOutlookOWAOnlyEnabled = FiddlerApplication.Prefs.GetBoolPref("extensions.O365FiddlerExtension.HighlightOutlookOWAOnlyEnabled", false);
                 // If the menu item Highlight Outlook and OWA Only is enabled then grey out all the other traffic.
                 if (Preferences.HighlightOutlookOWAOnlyEnabled)
                 {

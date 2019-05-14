@@ -235,7 +235,7 @@ namespace EXOFiddlerInspector.Inspectors
 
                 //this.Clear();
 
-                ResultsString.Append(FiddlerApplication.Prefs.GetStringPref("extensions.EXOFiddlerExtension.UpdateMessage", ""));
+                ResultsString.Append(FiddlerApplication.Prefs.GetStringPref("extensions.O365FiddlerExtension.UpdateMessage", ""));
 
                 ResultsString.AppendLine("General Session Data");
                 ResultsString.AppendLine("--------------------");
@@ -335,6 +335,19 @@ namespace EXOFiddlerInspector.Inspectors
                 else if ((this.session.oResponse["X-Server-Name"] != null && (this.session.oResponse["X-Server-Name"] != "")))
                 {
                     ResultsString.AppendLine($"X-Server-Name: {this.session.oResponse["X-Server-Name"]}");
+                }
+
+                // Write the SAZ file name into the inspector tab, if:
+                // 1. Fiddler is not attached as the system proxy.
+                // 2. The LoadSazFileName Fiddler application preference is not null or empty.
+                // This should mean that this data is only populated if a LoadSaz event occurs and Fiddler is not attached as the system proxy,
+                // Fiddler is not capturing during the review of the sessions.
+                if (!(Preferences.FiddlerAttached))
+                {
+                    if (!(string.IsNullOrEmpty(Preferences.LoadSazFileName)))
+                    {
+                        ResultsString.AppendLine($"SAZ File: {Preferences.LoadSazFileName}");
+                    }
                 }
 
                 ResultsString.AppendLine();

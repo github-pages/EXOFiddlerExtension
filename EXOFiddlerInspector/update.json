@@ -13,5 +13,7 @@
   "JSONSource": "https://aka.ms/O365FiddlerExtensionUpdateJson",
   "InstallerURL": "https://aka.ms/O365FiddlerExtension",
   "WikiURL": "https://aka.ms/O365FiddlerExtensionWiki",
-  "ReportIssuesURL": "https://aka.ms/O365FiddlerExtensionIssues"
+  "ReportIssuesURL": "https://aka.ms/O365FiddlerExtensionIssues",
+  "RulesetURL": "https://aka.ms/O365FiddlerExtensionRulesetURL",
+  "DebugRulesetURL": "https://aka.ms/O365FiddlerExtensionDebugRulesetURL"
 }
