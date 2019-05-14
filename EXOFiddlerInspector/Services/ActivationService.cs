@@ -40,7 +40,8 @@ namespace EXOFiddlerInspector.Services
                 CheckForAppUpdate.Instance.CheckForRuleSetUpdate();
             }
 
-            // Set LoadSazFileName to null. Will be populated by Handleloadsaz function in SessionProcessor.cs if LoadSaz event occurs.
+            // Set LoadSazFileName to null. 
+            // Will be populated by Handleloadsaz function in SessionProcessor.cs if LoadSaz event occurs.
             Preferences.LoadSazFileName = null;
 
             FiddlerApplication.UI.lvSessions.AddBoundColumn("Elapsed Time", 110, "X-ElapsedTime");

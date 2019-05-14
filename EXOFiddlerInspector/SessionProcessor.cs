@@ -159,6 +159,8 @@ namespace EXOFiddlerInspector
                 
                 if (Preferences.ExtensionEnabled)
                 {
+                    FiddlerObject.StatusText = $"Loading {session.id} of {e.arrSessions.Count()} from {Preferences.LoadSazFileName}.";
+
                     SessionProcessor.Instance.SetElapsedTime(session);
 
                     //SessionProcessor.Instance.SetSessionType(session);
@@ -171,6 +173,7 @@ namespace EXOFiddlerInspector
 
                     session.RefreshUI();
                 }
+                FiddlerObject.StatusText = $"{e.arrSessions.Count()} sessions loaded from {Preferences.LoadSazFileName}.";
             }
             FiddlerApplication.UI.lvSessions.EndUpdate();
         }
