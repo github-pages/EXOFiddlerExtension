@@ -21,9 +21,7 @@ namespace EXOFiddlerInspector
 
         public MenuItem miCheckForUpdate { get; set; }
 
-        //public MenuItem miHighlightOutlookOWAOnly { get; set; }
-
-        public MenuItem miReleasesDownloadWebpage { get; set; }
+        public MenuItem miDownload { get; set; }
 
         public MenuItem miWiki { get; set; }
 
@@ -51,7 +49,7 @@ namespace EXOFiddlerInspector
                 //this.miHighlightOutlookOWAOnly = new MenuItem("&Highlight Outlook and OWA Only", new System.EventHandler(this.miHighlightOutlookOWAOnly_click));
                 //this.miHighlightOutlookOWAOnly.Checked = Preferences.HighlightOutlookOWAOnlyEnabled;
 
-                this.miReleasesDownloadWebpage = new MenuItem("&Download", new System.EventHandler(this.miReleasesDownloadWebpage_click));
+                this.miDownload = new MenuItem("&Download", new System.EventHandler(this.miDownload_click));
 
                 this.miWiki = new MenuItem("&Wiki", new System.EventHandler(this.miWiki_Click));
 
@@ -62,10 +60,7 @@ namespace EXOFiddlerInspector
                 // Add menu items to top level menu.
                 this.ExchangeOnlineTopMenu.MenuItems.AddRange(new MenuItem[] { this.miEnabled,
                 new MenuItem("-"),
-                //this.miAppLoggingEnabled,
-                //this.miHighlightOutlookOWAOnly,
-                //new MenuItem("-"),
-                this.miReleasesDownloadWebpage,
+                this.miDownload,
                 this.miWiki,
                 this.miReportIssues,
                 new MenuItem("-"),
@@ -94,7 +89,7 @@ namespace EXOFiddlerInspector
             System.Diagnostics.Process.Start(Preferences.WikiURL);
         }
 
-        public void miReleasesDownloadWebpage_click(object sender, EventArgs e)
+        public void miDownload_click(object sender, EventArgs e)
         {
             // Fire up a web browser to the project Wiki URL.
             System.Diagnostics.Process.Start(Preferences.InstallerURL);
@@ -115,14 +110,5 @@ namespace EXOFiddlerInspector
             CheckForAppUpdate.Instance.CheckForJsonUpdate();
         }
 
-        /*
-        public void miHighlightOutlookOWAOnly_click(object sender, EventArgs e)
-        {
-            // Invert selection when this menu item is clicked.
-            miHighlightOutlookOWAOnly.Checked = !miHighlightOutlookOWAOnly.Checked;
-            // Match boolean variable on whether column is enabled or not.
-            Preferences.HighlightOutlookOWAOnlyEnabled = miHighlightOutlookOWAOnly.Checked;
-        }
-        */
     }
 }

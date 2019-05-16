@@ -531,10 +531,11 @@ namespace EXOFiddlerInspector
                             {
                                 this.session["ui-backcolor"] = HTMLColourGreen;
                                 this.session["ui-color"] = "black";
-                                this.session["X-SessionType"] = "EXO Autodiscover";
+                                this.session["X-SessionType"] = "Autodiscover-s.outlook.com";
 
-                                this.session["X-ResponseAlert"] = "Exchange Online Autodiscover.";
-                                this.session["X-ResponseComments"] = "Exchange Online Autodiscover.";
+                                this.session["X-ResponseAlert"] = "Exchange Online Autodiscover to Autodiscover-s.outlook.com";
+                                this.session["X-ResponseComments"] = "For Office 365 mailboxes, unless the LastKnownGood Autodiscover method is used, Outlook should always " +
+                                    "get to Autodiscover-s.outlook.com and the response should be a long XML stream.";
 
                                 // Increment SkipFurtherProcess for SetSessionType function and return.
                                 SkipFurtherProcessing++;
@@ -788,26 +789,60 @@ namespace EXOFiddlerInspector
                         this.session["ui-backcolor"] = HTMLColourGreen;
                         this.session["ui-color"] = "black";
 
-                        // Check if this is Outlook or not.
-                        if (this.session.LocalProcess.Contains("outlook"))
+                        // Check if this is Outlook or not. For some reason have seen rundll32 act on behalf of Outlook.exe.
+                        if (this.session.LocalProcess.Contains("outlook") || this.session.LocalProcess.Contains("rundll32"))
                         {
                             // Check if this is an Exchange Online redirect.
-                            if (this.session.host.Contains(".mail.onmicrosoft.com"))
+                            if (this.session.host.Contains(".mail.onmicrosoft.com") && this.session.oResponse["Location"].Equals("https://autodiscover-s.outlook.com/autodiscover/autodiscover.xml"))
+                            {
+                                this.session["X-SessionType"] = "Autodiscover-s.outlook.com";
+
+                                this.session["X-ResponseAlert"] = "Exchange Online Autodiscover redirect.";
+                                this.session["X-ResponseComments"] = "Exchange Online Autodiscover redirect to Autodiscover-s.outlook.com. " +
+                                    Environment.NewLine +
+                                    Environment.NewLine +
+                                    "Response header location found which points to https://autodiscover-s.outlook.com/autodiscover/autodiscover.xml. " +
+                                    Environment.NewLine +
+                                    Environment.NewLine +
+                                    "This is what we want to see." +
+                                    Environment.NewLine +
+                                    Environment.NewLine +
+                                    "Look for the HTTP 200 response from autodiscover-s.outlook.com on a subsequent session which should have the long Autodiscover XML stream Outlook will use " +
+                                    "to connect to the mailboxes and other resources the user has access to.";
+
+                                FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+
+                                // Increment SkipFurtherProcess for SetSessionType function and return.
+                                SkipFurtherProcessing++;
+                            }
+                            else if (this.session.host.Contains(".mail.onmicrosoft.com"))
                             {
                                 this.session["X-ResponseAlert"] = "Exchange Online Autodiscover redirect.";
-                                this.session["X-ResponseComments"] = "Exchange Online Autodiscover redirect. " + "" +
-                                    "Expect the response from this request to give the location https://autodiscover-s.outlook.com/autodiscover/autodiscover.xml." +
+                                this.session["X-ResponseComments"] = "Exchange Online Autodiscover redirect. " +
+                                    "Expected response from this request is to give the location https://autodiscover-s.outlook.com/autodiscover/autodiscover.xml." +
                                     Environment.NewLine +
                                     Environment.NewLine +
-                                    "Following that you should see a session with a HTTP 200 response from autodiscover-s.outlook.com with the large XML Autodiscover response from Exchange Online.";
+                                    "Following that you should see a session with a HTTP 200 response from autodiscover-s.outlook.com with the large XML Autodiscover response from Exchange Online." +
+                                    Environment.NewLine +
+                                    Environment.NewLine +
+                                    "Either that did not happen or just did not happen in this particular session. Look for a session which does redirect to autodiscover-s.outlook.com or " +
+                                    "for a session which contains a long Autodiscover XML response";
 
                                 FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
                             }
+
                             // If we did not request to a '.mail.onmicrosoft.com' host in a HTTP 302, then this must be Exchange On-Premise.
-                            else
+                            else if (this.session.fullUrl.Contains("Autodiscover"))
                             {
                                 this.session["X-ResponseAlert"] = "Exchange On-Premise Autodiscover redirect to Exchange Online.";
                                 this.session["X-ResponseComments"] = "Exchange On-Premise Autodiscover redirect to Exchange Online.";
+
+                                FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                            }
+                            else
+                            {
+                                this.session["X-ResponseAlert"] = "HTTP 302 Found / redirect.";
+                                this.session["X-ResponseComments"] = "HTTP 302 Found / redirect. A typical response, where one server redirects to another.";
 
                                 FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
                             }
@@ -1467,11 +1502,21 @@ namespace EXOFiddlerInspector
                             this.session["ui-backcolor"] = HTMLColourRed;
                             this.session["ui-color"] = "black";
 
+                            this.session["X-SessionType"] = "!Service Unavailable!";
+
                             this.session["X-ResponseAlert"] = "!HTTP 503 Service Unavailable!";
                             this.session["X-ResponseComments"] = "If you see this message for a session, start troubleshooting here first. Which ever server issued the HTTP 503 service unavailable " +
-                                "should be investigated and the issue mitigated before considering other errors or failures you see in the trace.";
-
-                            this.session["X-SessionType"] = "!Service Unavailable!";
+                                "should be investigated and the issue mitigated before considering other errors or failures you see in the trace." +
+                                Environment.NewLine +
+                                Environment.NewLine +
+                                "Check the raw tab for details on the server that issued this HTTP 503 Service Unavailable.";
+                            
+                            if (this.session.oResponse["X-Powered-By"].Contains("ASP.NET") || this.session.oResponse["Server"].Contains("IIS"))
+                            {
+                                this.session["X-ResponseComments"] += Environment.NewLine +
+                                    Environment.NewLine +
+                                    "Response headers (containing ASP.NET or IIS) suggest a Microsoft Windows server was reached and issued the response on this session.";
+                            }
 
                             SkipFurtherProcessing++;
 

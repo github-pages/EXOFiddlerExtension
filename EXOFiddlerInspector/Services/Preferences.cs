@@ -37,10 +37,7 @@ namespace EXOFiddlerInspector.Services
         public static Task<bool> SetDefaultPreferences()
         {
             ExtensionEnabled = true;
-            //AppLoggingEnabled = true;
-            //HighlightOutlookOWAOnlyEnabled = true;
             IsLoadSaz = false;
-            //ColumnsAllEnabled = true;
 
             ExecutionCount++;
 
