@@ -48,6 +48,21 @@ namespace EXOFiddlerInspector
         {
             FiddlerApplication.Log.LogString($"O365FiddlerExtention: Update check.");
 
+            if (Preferences.NeverWebCall)
+            {
+                if (Preferences.ManualCheckForUpdate)
+                {
+                    MessageBox.Show("NeverWebCall is enabled. You need to manually check for updates running in this mode. Check https://aka.ms/O365FiddlerExtension.", "Office 365 Fiddler Extension");
+                    Preferences.ManualCheckForUpdate = false;
+                }
+
+                FiddlerApplication.Log.LogString($"O365FiddlerExtention: CheckForAppUpdate - NeverWebCall active.");
+                FiddlerApplication.Log.LogString($"O365FiddlerExtention: CheckForAppUpdate - NOT calling out for extension updates!");
+                FiddlerApplication.Log.LogString($"O365FiddlerExtention: CheckForAppUpdate - Manually check for app updates: https://aka.ms/O365FiddlerExtension");
+                
+                return;
+            }
+
             using (var WebClient = new WebClient())
             {
                 try
@@ -138,34 +153,36 @@ namespace EXOFiddlerInspector
                     // BETA.
                     if (appVersion.Build.ToString().Length >= 4 || appVersion.Build > 1000)
                     {
+                        // Beta testing is running.
                         if (JsonData.BetaTestingActive.Equals(true))
                         {
-                            // Beta testing is running.
+                            // Newer Beta buld available.
                             if (JsonData.BetaVersionAvailable.Build > appVersion.Build)
                             {
-                                // Newer Beta buld available.
                                 Preferences.UpdateMessage = $"Update Information{Environment.NewLine}----------------" +
                                     $"{Environment.NewLine}You should update to the newer beta build." +
                                     $"{Environment.NewLine}Currently using BETA: v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}" +
                                     $"{Environment.NewLine}New BETA version available: v{JsonData.BetaVersionAvailable.Major}.{JsonData.BetaVersionAvailable.Minor}.{JsonData.BetaVersionAvailable.Build}" +
                                     $"{Environment.NewLine}{Environment.NewLine}" +
                                     $"Download the latest version: {Environment.NewLine}{Preferences.InstallerURL}{Environment.NewLine}{Environment.NewLine}";
+                                FiddlerApplication.Log.LogString($"O365FiddlerExtention: Beta testing is currently running.");
                                 FiddlerApplication.Log.LogString($"O365FiddlerExtention: Currently using BETA: v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}");
                                 FiddlerApplication.Log.LogString($"O365FiddlerExtention: New BETA version available: v{JsonData.AppVersionAvailable.Major}.{JsonData.AppVersionAvailable.Minor}.{JsonData.AppVersionAvailable.Build}");
                             }
                             else
+                            // Current Beta being used.
                             {
-                                // Current Beta being used.
                                 Preferences.UpdateMessage = $"Update Information{Environment.NewLine}----------------" +
                                     $"{Environment.NewLine}You're using the current beta build. Thanks for the testing!{Environment.NewLine}" +
                                     $"Currently using beta build: v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}{Environment.NewLine}" +
                                     $"Newest Beta build available: v{JsonData.BetaVersionAvailable.Major}.{JsonData.BetaVersionAvailable.Minor}.{JsonData.BetaVersionAvailable.Build}{Environment.NewLine}{Environment.NewLine}";
+                                FiddlerApplication.Log.LogString($"O365FiddlerExtention: Beta testing is currently running.");
                                 FiddlerApplication.Log.LogString($"O365FiddlerExtention: Current BETA version installed. v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}");
                             }
                         }
+                        // Beta testing is NOT running.
                         else
                         {
-                            // Beta testing is NOT running.
                             Preferences.UpdateMessage = $"Update Information{Environment.NewLine}----------------" +
                                 $"{Environment.NewLine}BETA testing NOT currently running." +
                                 $"{Environment.NewLine}You should update from this beta build to the latest production build" +
@@ -190,6 +207,15 @@ namespace EXOFiddlerInspector
 
         public void CheckForRuleSetUpdate()
         {
+            if (Preferences.NeverWebCall)
+            {
+                FiddlerApplication.Log.LogString($"O365FiddlerExtention: CheckForAppUpdate - NeverWebCall active.");
+                FiddlerApplication.Log.LogString($"O365FiddlerExtention: CheckForAppUpdate - NOT calling out for rule set updates!");
+                FiddlerApplication.Log.LogString($"O365FiddlerExtention: CheckForAppUpdate - Manually check for rule set update: https://aka.ms/O365FiddlerExtensionRulesetURL");
+
+                return;
+            }
+
             // 1. Get the local json file for rules if there is one.
 
             string LocalJsonData = "";

@@ -28,19 +28,8 @@ namespace EXOFiddlerInspector.Services
 
             SessionProcessor.Instance.Initialize();
 
-            // Check for extension and rule set updates, as long as web calls are allowed.
-            if (!(Preferences.NeverWebCall))
-            {
-                FiddlerApplication.Log.LogString($"O365FiddlerExtention: ActivationService - Check For Updates.");
-                CheckForAppUpdate.Instance.CheckForJsonUpdate();
-                CheckForAppUpdate.Instance.CheckForRuleSetUpdate();
-            }
-            else
-            {
-                FiddlerApplication.Log.LogString($"O365FiddlerExtention: ActivationService - NeverWebCall active.");
-                FiddlerApplication.Log.LogString($"O365FiddlerExtention: ActivationService - NOT calling out for extension updates!");
-                FiddlerApplication.Log.LogString($"O365FiddlerExtention: ActivationService - NOT calling out for rule set updates!");
-            }
+            CheckForAppUpdate.Instance.CheckForJsonUpdate();
+            CheckForAppUpdate.Instance.CheckForRuleSetUpdate();
 
             // Set LoadSazFileName to null. 
             // Will be populated by Handleloadsaz function in SessionProcessor.cs if LoadSaz event occurs.
@@ -63,6 +52,9 @@ namespace EXOFiddlerInspector.Services
                 if (!(Preferences.NeverWebCall))
                 {
                     await TelemetryService.InitializeAsync();
+                }
+                else
+                {
                     FiddlerApplication.Log.LogString($"O365FiddlerExtention: ActivationService - NOT calling out to telemetry service.");
                 }
             }
@@ -70,7 +62,14 @@ namespace EXOFiddlerInspector.Services
 
         public async void OnBeforeUnload()
         {
-            await TelemetryService.FlushClientAsync();
+            if (!(Preferences.NeverWebCall))
+            {
+                await TelemetryService.FlushClientAsync();
+            }
+            else
+            {
+                FiddlerApplication.Log.LogString($"O365FiddlerExtention: ActivationService - NOT calling out to telemetry service.");
+            }
         }
 
         /// <summary>

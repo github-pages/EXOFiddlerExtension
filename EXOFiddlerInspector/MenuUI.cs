@@ -51,11 +51,11 @@ namespace EXOFiddlerInspector
                 //this.miHighlightOutlookOWAOnly = new MenuItem("&Highlight Outlook and OWA Only", new System.EventHandler(this.miHighlightOutlookOWAOnly_click));
                 //this.miHighlightOutlookOWAOnly.Checked = Preferences.HighlightOutlookOWAOnlyEnabled;
 
-                this.miReleasesDownloadWebpage = new MenuItem("&Releases Download Page", new System.EventHandler(this.miReleasesDownloadWebpage_click));
+                this.miReleasesDownloadWebpage = new MenuItem("&Download", new System.EventHandler(this.miReleasesDownloadWebpage_click));
 
-                this.miWiki = new MenuItem("Extension &Wiki", new System.EventHandler(this.miWiki_Click));
+                this.miWiki = new MenuItem("&Wiki", new System.EventHandler(this.miWiki_Click));
 
-                this.miReportIssues = new MenuItem("&Report Issues", new System.EventHandler(this.miReportIssues_Click));
+                this.miReportIssues = new MenuItem("&Issues", new System.EventHandler(this.miReportIssues_Click));
 
                 this.miCheckForUpdate = new MenuItem("&Check For Update", new System.EventHandler(this.miCheckForUpdate_Click));
 

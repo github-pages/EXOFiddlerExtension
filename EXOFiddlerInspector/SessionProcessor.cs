@@ -1468,7 +1468,8 @@ namespace EXOFiddlerInspector
                             this.session["ui-color"] = "black";
 
                             this.session["X-ResponseAlert"] = "!HTTP 503 Service Unavailable!";
-                            this.session["X-ResponseComments"] = "HTTP 503 Service Unavailable.";
+                            this.session["X-ResponseComments"] = "If you see this message for a session, start troubleshooting here first. Which ever server issued the HTTP 503 service unavailable " +
+                                "should be investigated and the issue mitigated before considering other errors or failures you see in the trace.";
 
                             this.session["X-SessionType"] = "!Service Unavailable!";
 
@@ -2095,7 +2096,7 @@ namespace EXOFiddlerInspector
             }
             else if (this.session.oRequest["Authorization"].Contains("Negotiation") || this.session.oRequest["Authorization"].Contains("Negotiate"))
             {
-                this.session["X-Authentication"] = "Negotiation";
+                this.session["X-Authentication"] = "Negotiate";
 
                 this.session["X-AuthenticationDesc"] = this.session["X-ProcessName"] + " involved in Negotiation Authentication. Likely to be a server running within your network. " +
                     "Check the Raw tab for further information on this server if interested.";
