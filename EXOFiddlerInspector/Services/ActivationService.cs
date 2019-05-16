@@ -28,16 +28,18 @@ namespace EXOFiddlerInspector.Services
 
             SessionProcessor.Instance.Initialize();
 
-            // Check for app updates, as long as web calls are allowed.
+            // Check for extension and rule set updates, as long as web calls are allowed.
             if (!(Preferences.NeverWebCall))
             {
+                FiddlerApplication.Log.LogString($"O365FiddlerExtention: ActivationService - Check For Updates.");
                 CheckForAppUpdate.Instance.CheckForJsonUpdate();
-            }
-
-            // Check for rule set updates, as long as web calls are allowed.
-            if (!(Preferences.NeverWebCall))
-            {
                 CheckForAppUpdate.Instance.CheckForRuleSetUpdate();
+            }
+            else
+            {
+                FiddlerApplication.Log.LogString($"O365FiddlerExtention: ActivationService - NeverWebCall active.");
+                FiddlerApplication.Log.LogString($"O365FiddlerExtention: ActivationService - NOT calling out for extension updates!");
+                FiddlerApplication.Log.LogString($"O365FiddlerExtention: ActivationService - NOT calling out for rule set updates!");
             }
 
             // Set LoadSazFileName to null. 
@@ -61,8 +63,8 @@ namespace EXOFiddlerInspector.Services
                 if (!(Preferences.NeverWebCall))
                 {
                     await TelemetryService.InitializeAsync();
+                    FiddlerApplication.Log.LogString($"O365FiddlerExtention: ActivationService - NOT calling out to telemetry service.");
                 }
-                
             }
         }
 
@@ -117,36 +119,5 @@ namespace EXOFiddlerInspector.Services
         /// </summary>
         /// <param name="_session"></param>
         public void OnBeforeReturningError(Session _session) { }
-
-        //public void SetColumns()
-        //{
-
-        //    if (Preferences.ExtensionEnabled)
-        //    {
-        //        FiddlerApplication.UI.lvSessions.BeginUpdate();
-
-        //        // Only on LoadSAZ add all the columns.
-        //        if (FiddlerApplication.Prefs.GetBoolPref("extensions.O365FiddlerExtension.LoadSaz", false))
-        //        {
-        //            FiddlerApplication.UI.lvSessions.AddBoundColumn("Elapsed Time", 110, "X-ElapsedTime");
-        //            FiddlerApplication.UI.lvSessions.AddBoundColumn("Response Server", 0, 130, "X-ResponseServer");
-        //            FiddlerApplication.UI.lvSessions.AddBoundColumn("Host IP", 0, 110, "X-HostIP");
-        //            FiddlerApplication.UI.lvSessions.AddBoundColumn("Session Type", 0, 150, "X-SessionType");
-        //            FiddlerApplication.UI.lvSessions.AddBoundColumn("Authentication", 0, 140, "X-Authentication");
-        //        }
-        //        // On live trace just add in the Host IP column.
-        //        else
-        //        {
-        //            FiddlerApplication.UI.lvSessions.AddBoundColumn("Host IP", 110, "X-HostIP");
-        //        }
-
-        //    }
-        //    else
-        //    {
-        //        int iColumnsCount = FiddlerApplication.UI.lvSessions.Columns.Count;
-        //        FiddlerApplication.UI.lvSessions.SetColumnOrderAndWidth("Process", iColumnsCount - 2, -1);
-        //    }
-        //    FiddlerApplication.UI.lvSessions.BeginUpdate();
-        //}
     }
 }

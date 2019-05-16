@@ -388,7 +388,6 @@ namespace EXOFiddlerInspector.Inspectors
                     {
                         double ClientSeconds = Math.Round((this.session.Timers.ClientDoneResponse - this.session.Timers.ClientBeginRequest).TotalSeconds);
                         ResultsString.AppendLine($"Elapsed Time: {ClientMilliseconds}ms or {ClientSeconds} seconds.");
-                        ResultsString.AppendLine();
                     }
                     // Normal timed session, just output in milliseconds.
                     else
@@ -459,7 +458,8 @@ namespace EXOFiddlerInspector.Inspectors
                 }
 
                 // Authentication
-                if (this.session["X-AUTHENTICATION"] != "No Auth Headers")
+                if (!(string.IsNullOrEmpty(this.session.oRequest["Authorization"])))
+                    //&& this.session.RequestHeaders this.session["X-Authentication"] != "No Auth Headers")
                 {
                     ResultsString.AppendLine();
                     ResultsString.AppendLine("Authentication");

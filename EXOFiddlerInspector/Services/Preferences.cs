@@ -67,7 +67,8 @@ namespace EXOFiddlerInspector.Services
             {
                 _extensionEnabled = value;
                 FiddlerApplication.Prefs.SetBoolPref("extensions.O365FiddlerExtension.enabled", value);
-                MenuUI.Instance.miEnabled.Text = ExtensionEnabled ? "Disable" : "Enable";
+                // Commented this out, does not appear to be necessary, since we do not change the text value of this menu item.
+                // MenuUI.Instance.miEnabled.Text = ExtensionEnabled ? "Disable" : "Enable";
                 MenuUI.Instance.ExchangeOnlineTopMenu.Text = ExtensionEnabled ? "Office 365" : "Office 365 (Disabled)";
             }
         }

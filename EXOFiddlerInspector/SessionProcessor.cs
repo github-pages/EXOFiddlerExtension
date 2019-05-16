@@ -248,6 +248,8 @@ namespace EXOFiddlerInspector
 
                 this.session["X-SessionType"] = "Connect Tunnel";
 
+                this.session["X-Authentication"] = "Connect Tunnel";
+
                 this.session["X-ResponseAlert"] = "Connect Tunnel";
                 this.session["X-ResponseComments"] = "This is an encrypted tunnel. You can expect to see some connect tunnel sessions peppered through Fiddler traces. It can be considered normal." +
                     Environment.NewLine +
@@ -261,7 +263,7 @@ namespace EXOFiddlerInspector
                     Environment.NewLine + 
                     "If in any doubt see instructions at https://docs.telerik.com/fiddler/Configure-Fiddler/Tasks/DecryptHTTPS for information on how to enable HTTPS decryption.";
 
-                FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; Connect Tunnel.");
 
                 SkipFurtherProcessing++;
                 return;
@@ -271,13 +273,18 @@ namespace EXOFiddlerInspector
             // Fiddler Update Checks.
             //
             // Very likely the first session captured when running Fiddler.
-            else if (this.session.fullUrl.Contains("https://www.fiddler2.com/UpdateCheck.aspx"))
+            else if (this.session.hostname.Equals("www.fiddler2.com") && this.session.fullUrl.Contains("UpdateCheck.aspx"))
             {
                 this.session["X-SessionType"] = "Fiddler Update Check";
                 this.session["ui-backcolor"] = HTMLColourGrey;
                 this.session["ui-color"] = "black";
 
-                FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                this.session["X-Authentication"] = "Fiddler Update Check";
+
+                this.session["X-ResponseAlert"] = "Fiddler Update Check";
+                this.session["X-ResponseComments"] = "This is the Fiddler application itself running an update check, not the Office 365 Fiddler Extension.";
+
+                FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; Fiddler Update Check");
 
                 SkipFurtherProcessing++;
                 return;
@@ -782,7 +789,7 @@ namespace EXOFiddlerInspector
                         this.session["ui-color"] = "black";
 
                         // Check if this is Outlook or not.
-                        if (this.session["X-ProcessName"].Contains("outlook"))
+                        if (this.session.LocalProcess.Contains("outlook"))
                         {
                             // Check if this is an Exchange Online redirect.
                             if (this.session.host.Contains(".mail.onmicrosoft.com"))
@@ -1774,12 +1781,19 @@ namespace EXOFiddlerInspector
         {
             this.session = session;
 
-            // If this is a connect tunnel, bail on any authentication processing asap.
-            if (SkipFurtherProcessing > 0)
+            // If the session does not contain authorization headers, bail.
+            //if (this.session.RequestHeaders["Authorization"].Length == 0)
+
+            //FiddlerApplication.Log.LogString($"O365FiddlerExtention: Authentication Test:{this.session.oRequest["Authorization"]}:");
+            if (string.IsNullOrEmpty(this.session.oRequest["Authorization"]))
+            {
+                this.session["X-Authentication"] = "No Auth Headers";
                 return;
+            }
 
             Boolean OverrideFurtherAuthChecking = false;
 
+            this.session["X-Authentication"] = "";
             this.session["X-Office365AuthType"] = "";
 
             // Set process name, split and exclude port used.
@@ -2079,14 +2093,18 @@ namespace EXOFiddlerInspector
 
                 FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-Authentication"]}");
             }
+            else if (this.session.oRequest["Authorization"].Contains("Negotiation") || this.session.oRequest["Authorization"].Contains("Negotiate"))
+            {
+                this.session["X-Authentication"] = "Negotiation";
+
+                this.session["X-AuthenticationDesc"] = this.session["X-ProcessName"] + " involved in Negotiation Authentication. Likely to be a server running within your network. " +
+                    "Check the Raw tab for further information on this server if interested.";
+
+                FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-Authentication"]}");
+            }
             else
             {
                 SAMLParserFieldsNoData();
-                // Change which control appears for this session on the Office365 Auth inspector tab.
-                this.session["X-Office365AuthType"] = "Office365Auth";
-
-                this.session["X-Authentication"] = "No Auth Headers";
-                this.session["X-AuthenticationDesc"] = "No Auth Headers";
             }
         }
         #endregion
