@@ -97,13 +97,11 @@ namespace EXOFiddlerInspector.Services
             // Only do this on loadSAZ?
             SessionProcessor.Instance.SetElapsedTime(_session);
 
-            SessionProcessor.Instance.OnPeekAtResponseHeaders(_session);
-
-            //SessionProcessor.Instance.SetSessionType(_session);
+            SessionProcessor.Instance.SetResponseServer(_session);
 
             SessionProcessor.Instance.SetAuthentication(_session);
 
-            SessionProcessor.Instance.SetResponseServer(_session);
+            SessionProcessor.Instance.OnPeekAtResponseHeaders(_session);
 
             _session.RefreshUI();
         }

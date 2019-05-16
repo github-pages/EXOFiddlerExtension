@@ -21,8 +21,24 @@ namespace EXOFiddlerInspector.UI
             ResultsOutput = ResultsDisplay;
 
         }
+
         private void ResetPrefs()
         {
+            FiddlerApplication.Prefs.RemovePref("extensions.EXOFiddlerInspector.enabled");
+            FiddlerApplication.Prefs.RemovePref("extensions.EXOFiddlerInspector.ColumnsEnableAll");
+            FiddlerApplication.Prefs.RemovePref("extensions.EXOFiddlerInspector.DemoMode");
+            FiddlerApplication.Prefs.RemovePref("extensions.EXOFiddlerInspector.DemoModeBreakScenarios");
+            FiddlerApplication.Prefs.RemovePref("extensions.EXOFiddlerInspector.ElapsedTimeColumnEnabled");
+            FiddlerApplication.Prefs.RemovePref("extensions.EXOFiddlerInspector.ResponseServerColumnEnabled");
+            FiddlerApplication.Prefs.RemovePref("extensions.EXOFiddlerInspector.ExchangeTypeColumnEnabled");
+            FiddlerApplication.Prefs.RemovePref("extensions.EXOFiddlerInspector.AppLoggingEnabled");
+            FiddlerApplication.Prefs.RemovePref("extensions.EXOFiddlerInspector.HighlightOutlookOWAOnlyEnabled");
+            FiddlerApplication.Prefs.RemovePref("extensions.EXOFiddlerInspector.ExecutionCount");
+            FiddlerApplication.Prefs.RemovePref("extensions.EXOFiddlerInspector.ManualCheckForUpdate");
+            FiddlerApplication.Prefs.RemovePref("extensions.EXOFiddlerInspector.MenuTitle");
+            FiddlerApplication.Prefs.RemovePref("extensions.EXOFiddlerInspector.HostIPColumnEnabled");
+            FiddlerApplication.Prefs.RemovePref("extensions.EXOFiddlerInspector.AuthColumnEnabled");
+
             FiddlerApplication.Prefs.RemovePref("extensions.EXOFiddlerExtension.enabled");
             FiddlerApplication.Prefs.RemovePref("extensions.EXOFiddlerExtension.ColumnsEnableAll");
             FiddlerApplication.Prefs.RemovePref("extensions.EXOFiddlerExtension.DemoMode");

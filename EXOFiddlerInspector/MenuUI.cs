@@ -19,11 +19,9 @@ namespace EXOFiddlerInspector
 
         public MenuItem miEnabled { get; set; }
 
-        //public MenuItem miAppLoggingEnabled { get; set; }
-
         public MenuItem miCheckForUpdate { get; set; }
 
-        public MenuItem miHighlightOutlookOWAOnly { get; set; }
+        //public MenuItem miHighlightOutlookOWAOnly { get; set; }
 
         public MenuItem miReleasesDownloadWebpage { get; set; }
 
@@ -50,18 +48,8 @@ namespace EXOFiddlerInspector
                 this.miEnabled = new MenuItem("Enable", new EventHandler(this.miEnabled_Click));
                 this.miEnabled.Checked = Preferences.ExtensionEnabled;
 
-                //this.miColumnsEnableDisable = new MenuItem(Preferences.ColumnsAllEnabled ? "Turn Columns Off" : "Turn Columns On", new EventHandler(this.miColumnsEnableAll_Click));
-                //this.miColumnsEnableDisable.Checked = Preferences.ColumnsAllEnabled;
-                //this.miColumnsEnableDisable.Index = 2;
-
-                //this.miSeperator2 = new MenuItem("-");
-                //this.miSeperator2.Index = 3;
-
-                //this.miAppLoggingEnabled = new MenuItem("Application &Logging Enabled", new System.EventHandler(this.miAppLoggingEnabled_Click));
-                //this.miAppLoggingEnabled.Checked = Preferences.AppLoggingEnabled;
-
-                this.miHighlightOutlookOWAOnly = new MenuItem("&Highlight Outlook and OWA Only", new System.EventHandler(this.miHighlightOutlookOWAOnly_click));
-                this.miHighlightOutlookOWAOnly.Checked = Preferences.HighlightOutlookOWAOnlyEnabled;
+                //this.miHighlightOutlookOWAOnly = new MenuItem("&Highlight Outlook and OWA Only", new System.EventHandler(this.miHighlightOutlookOWAOnly_click));
+                //this.miHighlightOutlookOWAOnly.Checked = Preferences.HighlightOutlookOWAOnlyEnabled;
 
                 this.miReleasesDownloadWebpage = new MenuItem("&Releases Download Page", new System.EventHandler(this.miReleasesDownloadWebpage_click));
 
@@ -75,8 +63,8 @@ namespace EXOFiddlerInspector
                 this.ExchangeOnlineTopMenu.MenuItems.AddRange(new MenuItem[] { this.miEnabled,
                 new MenuItem("-"),
                 //this.miAppLoggingEnabled,
-                this.miHighlightOutlookOWAOnly,
-                new MenuItem("-"),
+                //this.miHighlightOutlookOWAOnly,
+                //new MenuItem("-"),
                 this.miReleasesDownloadWebpage,
                 this.miWiki,
                 this.miReportIssues,
@@ -100,24 +88,6 @@ namespace EXOFiddlerInspector
             //TelemetryService.TrackEvent($"ExtensionIsEnabled_{miEnabled.Checked}");
         }
 
-        public void miColumnsEnableAll_Click(object sender, EventArgs e)
-        {
-            //    miColumnsEnableDisable.Checked = !miColumnsEnableDisable.Checked;
-            //    Preferences.ColumnsAllEnabled = miColumnsEnableDisable.Checked;
-            //    miColumnsEnableDisable.Text = Preferences.ColumnsAllEnabled ? "Turn Columns Off" : "Turn Columns On";
-
-        }
-
-        /*
-        public void miAppLoggingEnabled_Click(object sender, EventArgs e)
-        {
-            // Invert selection when this menu item is clicked.
-            miAppLoggingEnabled.Checked = !miAppLoggingEnabled.Checked;
-            // Match boolean variable on whether app logging is enabled or not.
-            Preferences.AppLoggingEnabled = miAppLoggingEnabled.Checked;
-        }
-        */
-
         public void miWiki_Click(object sender, EventArgs e)
         {
             // Fire up a web browser to the project Wiki URL.
@@ -140,15 +110,12 @@ namespace EXOFiddlerInspector
         {
             // Since the user has manually clicked this menu item to check for updates,
             // set this boolean variable to true so we can give user feedback if no update available.
-
-            //FiddlerApplication.Prefs.SetBoolPref("extensions.O365FiddlerExtension.ManualCheckForUpdate", true);
             Preferences.ManualCheckForUpdate = true;
             // Check for app update.
-            //CheckForAppUpdate calledCheckForAppUpdate = new CheckForAppUpdate();
-            //calledCheckForAppUpdate.CheckForUpdate();
             CheckForAppUpdate.Instance.CheckForJsonUpdate();
         }
 
+        /*
         public void miHighlightOutlookOWAOnly_click(object sender, EventArgs e)
         {
             // Invert selection when this menu item is clicked.
@@ -156,5 +123,6 @@ namespace EXOFiddlerInspector
             // Match boolean variable on whether column is enabled or not.
             Preferences.HighlightOutlookOWAOnlyEnabled = miHighlightOutlookOWAOnly.Checked;
         }
+        */
     }
 }

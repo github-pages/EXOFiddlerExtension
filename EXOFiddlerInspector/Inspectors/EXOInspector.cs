@@ -145,7 +145,7 @@ namespace EXOFiddlerInspector.Inspectors
                     this.BaseHeaders = this.session.oResponse.headers;
                 }
             }
-
+           
             if (this.IsEXOhttp)
             {
                 return 100;
@@ -154,11 +154,13 @@ namespace EXOFiddlerInspector.Inspectors
             {
                 return 0;
             }
+            
         }
 
 
         /// <summary>
-        /// Gets a value indicating whether the message is MAPI protocol message.
+        /// Gets a value indicating whether a session double click or return
+        /// should fire to the Office 365 inspector tab or not.
         /// </summary>
         public bool IsEXOhttp
         {
@@ -169,7 +171,16 @@ namespace EXOFiddlerInspector.Inspectors
                     this.session.utilDecodeRequest(true);
                     this.session.utilDecodeResponse(true);
 
-                    if (this.session.LocalProcess.Contains("outlook") ||
+                    if (this.session.LocalProcess.Contains("Outlook") ||
+                    this.session.LocalProcess.Contains("Teams") ||
+                    this.session.LocalProcess.Contains("OneDrive") ||
+                    this.session.LocalProcess.Contains("OneNote") ||
+                    this.session.LocalProcess.Contains("Word") ||
+                    this.session.LocalProcess.Contains("Excel") ||
+                    this.session.LocalProcess.Contains("PowerPoint") ||
+                    this.session.LocalProcess.Contains("Access") ||
+                    this.session.LocalProcess.Contains("Lync") ||
+                    this.session.LocalProcess.Contains("skype") ||
                     this.session.LocalProcess.Contains("searchprotocolhost") ||
                     this.session.LocalProcess.Contains("iexplore") ||
                     this.session.LocalProcess.Contains("chrome") ||
@@ -219,9 +230,9 @@ namespace EXOFiddlerInspector.Inspectors
                 if (!Preferences.ExtensionEnabled)
                 {
                     Clear();
-                    ResultsString.AppendLine("-------------------------------");
+                    ResultsString.AppendLine("--------------------------------");
                     ResultsString.AppendLine("O365 Fiddler Extension Disabled.");
-                    ResultsString.AppendLine("-------------------------------");
+                    ResultsString.AppendLine("--------------------------------");
                     ExchangeResponseControl.ResultsOutput.AppendText(ResultsString.ToString());
                     return;
                 }
@@ -235,7 +246,7 @@ namespace EXOFiddlerInspector.Inspectors
 
                 //this.Clear();
 
-                ResultsString.Append(FiddlerApplication.Prefs.GetStringPref("extensions.O365FiddlerExtension.UpdateMessage", ""));
+                ResultsString.Append(Preferences.UpdateMessage);
 
                 ResultsString.AppendLine("General Session Data");
                 ResultsString.AppendLine("--------------------");
@@ -371,12 +382,18 @@ namespace EXOFiddlerInspector.Inspectors
                     double ClientMilliseconds = Math.Round((this.session.Timers.ClientDoneResponse - this.session.Timers.ClientBeginRequest).TotalMilliseconds);
                     
                     ResultsString.AppendLine();
-                    ResultsString.AppendLine($"Elapsed Time: {ClientMilliseconds}ms");
-
+                    
+                    // Slow running session, slightly different output.
                     if (ClientMilliseconds > 1000)
                     {
                         double ClientSeconds = Math.Round((this.session.Timers.ClientDoneResponse - this.session.Timers.ClientBeginRequest).TotalSeconds);
-                        ResultsString.AppendLine($"Elapsed Time: {ClientSeconds}s");
+                        ResultsString.AppendLine($"Elapsed Time: {ClientMilliseconds}ms or {ClientSeconds} seconds.");
+                        ResultsString.AppendLine();
+                    }
+                    // Normal timed session, just output in milliseconds.
+                    else
+                    {
+                        ResultsString.AppendLine($"Elapsed Time: {ClientMilliseconds}ms");
                     }
 
                     int SlowRunningSessionThreshold = Preferences.GetSlowRunningSessionThreshold();
@@ -384,10 +401,7 @@ namespace EXOFiddlerInspector.Inspectors
                     if (ClientMilliseconds > SlowRunningSessionThreshold)
                     {
                         ResultsString.AppendLine("!Long running session!");
-                        //if (Preferences.AppLoggingEnabled)
-                        //{
-                            FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " Long running session.");
-                        //}
+                        FiddlerApplication.Log.LogString("O365FiddlerExtension: " + this.session.id + " Long running session.");
                     }
                 }
                 else
@@ -433,10 +447,7 @@ namespace EXOFiddlerInspector.Inspectors
                     if (ServerMilliseconds > SlowRunningSessionThreshold)
                     {
                         ResultsString.AppendLine("!Long running EXO session!");
-                        //if (Preferences.AppLoggingEnabled)
-                        //{
-                            FiddlerApplication.Log.LogString("EXOFiddlerExtention: " + this.session.id + " Long running EXO session.");
-                        //}
+                        FiddlerApplication.Log.LogString("O365FiddlerExtension: " + this.session.id + " Long running EXO session.");
                     }
                     ResultsString.AppendLine();
                     ResultsString.AppendLine($"Transit Time: { Math.Round((this.session.Timers.ServerDoneResponse - this.session.Timers.ServerBeginResponse).TotalMilliseconds)} ms");
@@ -485,10 +496,7 @@ namespace EXOFiddlerInspector.Inspectors
             }
             catch (Exception ex)
             {
-                ResultsString.AppendLine();
-                ResultsString.AppendLine(ex.Message);
-                ResultsString.AppendLine();
-                ExchangeResponseControl.ResultsOutput.AppendText(ResultsString.ToString());
+                FiddlerApplication.Log.LogString($"O365FiddlerExtention: Exception: Write to inspector text control. {ex.Message}.");
             }
         }
 

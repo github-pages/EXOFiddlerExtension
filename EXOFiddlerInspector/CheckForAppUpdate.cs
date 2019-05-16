@@ -54,12 +54,6 @@ namespace EXOFiddlerInspector
                 {
                     var json = WebClient.DownloadString(Preferences.JSONSource);
 
-                    //var updatejsonfile = @"%USERPROFILE%\Documents\Fiddler2\update.json";
-                    //var filePath = Environment.ExpandEnvironmentVariables(updatejsonfile);
-
-//                    System.IO.File.WriteAllLines(updatejsonfile, json.ToString());
-
-
                     var JsonData = JsonConvert.DeserializeObject<JSONTypeClass>(json);
 
                     Version appVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
@@ -92,26 +86,24 @@ namespace EXOFiddlerInspector
                             Preferences.ManualCheckForUpdate = false;
                         }
                         // Clear the update message.
-                        FiddlerApplication.Prefs.SetStringPref("extensions.O365FiddlerExtension.UpdateMessage","");
+                        Preferences.UpdateMessage = "";
 
                         FiddlerApplication.Log.LogString($"O365FiddlerExtention: Latest version installed. v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}");
                     }
                     else
                     {
                         // Different version available found than what is currently running.
-                        FiddlerApplication.Prefs.SetStringPref("extensions.O365FiddlerExtension.UpdateMessage", $"Update Information{Environment.NewLine}----------------" +
+                        Preferences.UpdateMessage = $"Update Information{Environment.NewLine}----------------" +
                             $"{Environment.NewLine}You should update to the latest version available." +
                             $"{Environment.NewLine}New version available: v{JsonData.AppVersionAvailable.Major}.{JsonData.AppVersionAvailable.Minor}.{JsonData.AppVersionAvailable.Build}" +
                             $"{Environment.NewLine}Currently using: v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}{Environment.NewLine}{Environment.NewLine}" +
-                            $"Download the latest version: {Environment.NewLine}{Preferences.InstallerURL}{Environment.NewLine}{Environment.NewLine}");
+                            $"Download the latest version: {Environment.NewLine}{Preferences.InstallerURL}{Environment.NewLine}{Environment.NewLine}";
                         FiddlerApplication.Log.LogString($"O365FiddlerExtention: New version available: v{JsonData.AppVersionAvailable.Major}.{JsonData.AppVersionAvailable.Minor}.{JsonData.AppVersionAvailable.Build}");
                         FiddlerApplication.Log.LogString($"O365FiddlerExtention: Currently using: v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}");
 
                         // Regardless of extension enabled or not, give the user feedback when they click the 'Check For Update' menu item if no update is available.
                         if (Preferences.ManualCheckForUpdate)
                         {
-                            //MessageBox.Show("EXOFiddlerExtention: Update available. v" + newVersion.Major + "." + newVersion.Minor + "." + newVersion.Build + ".", "EXO Fiddler Extension");
-
                             string message = $"You are currently using v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}{Environment.NewLine}" +
                                 $"A new version is available v{JsonData.AppVersionAvailable.Major}.{JsonData.AppVersionAvailable.Minor}.{JsonData.AppVersionAvailable.Build}{Environment.NewLine}" +
                                 "Do you want to download the update?";
@@ -134,15 +126,11 @@ namespace EXOFiddlerInspector
                             {
                                 // Execute the installer MSI URL, which will open in the user's default browser.
                                 System.Diagnostics.Process.Start(Preferences.InstallerURL);
-                                //if (Preferences.AppLoggingEnabled)
-                                //{
                                 FiddlerApplication.Log.LogString($"O365FiddlerExtention: Version installed. v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}");
                                 FiddlerApplication.Log.LogString($"O365FiddlerExtention: New Version Available. v{JsonData.AppVersionAvailable.Major}.{JsonData.AppVersionAvailable.Minor}.{JsonData.AppVersionAvailable.Build}");
-                                //}
                             }
                             // return this perference back to false, so we don't give this feedback unintentionally.
                             Preferences.ManualCheckForUpdate = false;
-                            //FiddlerApplication.Prefs.SetBoolPref("extensions.O365FiddlerExtension.ManualCheckForUpdate", false);
                         }
 
                     }
@@ -150,53 +138,48 @@ namespace EXOFiddlerInspector
                     // BETA.
                     if (appVersion.Build.ToString().Length >= 4 || appVersion.Build > 1000)
                     {
-                        // Application version detected is a beta version.
-
-                        //if (JsonData.BetaVersionAvailable.Build.ToString().Length == 4 || JsonData.BetaVersionAvailable.Build > 1000)
-                        //{
-                            if (JsonData.BetaTestingActive.Equals(true))
+                        if (JsonData.BetaTestingActive.Equals(true))
+                        {
+                            // Beta testing is running.
+                            if (JsonData.BetaVersionAvailable.Build > appVersion.Build)
                             {
-                                // Beta testing is running.
-                                if (JsonData.BetaVersionAvailable.Build > appVersion.Build)
-                                {
-                                    // Newer Beta buld available.
-                                    FiddlerApplication.Prefs.SetStringPref("extensions.O365FiddlerExtension.UpdateMessage", $"Update Information{Environment.NewLine}----------------" +
-                                        $"{Environment.NewLine}You should update to the newer beta build." +
-                                        $"{Environment.NewLine}Currently using BETA: v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}" +
-                                        $"{Environment.NewLine}New BETA version available: v{JsonData.BetaVersionAvailable.Major}.{JsonData.BetaVersionAvailable.Minor}.{JsonData.BetaVersionAvailable.Build}" +
-                                        $"{Environment.NewLine}{Environment.NewLine}" +
-                                        $"Download the latest version: {Environment.NewLine}{Preferences.InstallerURL}{Environment.NewLine}{Environment.NewLine}");
-                                    FiddlerApplication.Log.LogString($"O365FiddlerExtention: Currently using BETA: v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}");
-                                    FiddlerApplication.Log.LogString($"O365FiddlerExtention: New BETA version available: v{JsonData.AppVersionAvailable.Major}.{JsonData.AppVersionAvailable.Minor}.{JsonData.AppVersionAvailable.Build}");
-                                }
-                                else
-                                {
-                                    // Current Beta being used.
-                                    FiddlerApplication.Prefs.SetStringPref("extensions.O365FiddlerExtension.UpdateMessage", $"Update Information{Environment.NewLine}----------------" +
-                                        $"{Environment.NewLine}You're using the current beta build. Thanks for the testing!{Environment.NewLine}" +
-                                        $"Currently using beta build: v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}{Environment.NewLine}" +
-                                        $"Newest Beta build available: v{JsonData.BetaVersionAvailable.Major}.{JsonData.BetaVersionAvailable.Minor}.{JsonData.BetaVersionAvailable.Build}{Environment.NewLine}{Environment.NewLine}");
-                                    FiddlerApplication.Log.LogString($"O365FiddlerExtention: Current BETA version installed. v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}");
-                                }
+                                // Newer Beta buld available.
+                                Preferences.UpdateMessage = $"Update Information{Environment.NewLine}----------------" +
+                                    $"{Environment.NewLine}You should update to the newer beta build." +
+                                    $"{Environment.NewLine}Currently using BETA: v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}" +
+                                    $"{Environment.NewLine}New BETA version available: v{JsonData.BetaVersionAvailable.Major}.{JsonData.BetaVersionAvailable.Minor}.{JsonData.BetaVersionAvailable.Build}" +
+                                    $"{Environment.NewLine}{Environment.NewLine}" +
+                                    $"Download the latest version: {Environment.NewLine}{Preferences.InstallerURL}{Environment.NewLine}{Environment.NewLine}";
+                                FiddlerApplication.Log.LogString($"O365FiddlerExtention: Currently using BETA: v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}");
+                                FiddlerApplication.Log.LogString($"O365FiddlerExtention: New BETA version available: v{JsonData.AppVersionAvailable.Major}.{JsonData.AppVersionAvailable.Minor}.{JsonData.AppVersionAvailable.Build}");
                             }
                             else
                             {
-                                // Beta testing is NOT running.
-                                FiddlerApplication.Prefs.SetStringPref("extensions.O365FiddlerExtension.UpdateMessage", $"Update Information{Environment.NewLine}----------------" +
-                                    $"{Environment.NewLine}BETA testing NOT currently running." +
-                                    $"{Environment.NewLine}You should update from this beta build to the latest production build" +
-                                    $"{Environment.NewLine}Currently using beta version: v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}" +
-                                    $"{Environment.NewLine}Newest production version available: v{JsonData.AppVersionAvailable.Major}.{JsonData.AppVersionAvailable.Minor}.{JsonData.AppVersionAvailable.Build}" +
-                                    $"{Environment.NewLine}{Environment.NewLine}" +
-                                    $"Download the latest version: {Environment.NewLine}{Preferences.InstallerURL}{Environment.NewLine}{Environment.NewLine}");
-                                FiddlerApplication.Log.LogString($"O365FiddlerExtention: BETA testing NOT currently running.");
-                                FiddlerApplication.Log.LogString($"O365FiddlerExtention: You should update from this beta build to the latest production build.");
+                                // Current Beta being used.
+                                Preferences.UpdateMessage = $"Update Information{Environment.NewLine}----------------" +
+                                    $"{Environment.NewLine}You're using the current beta build. Thanks for the testing!{Environment.NewLine}" +
+                                    $"Currently using beta build: v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}{Environment.NewLine}" +
+                                    $"Newest Beta build available: v{JsonData.BetaVersionAvailable.Major}.{JsonData.BetaVersionAvailable.Minor}.{JsonData.BetaVersionAvailable.Build}{Environment.NewLine}{Environment.NewLine}";
                                 FiddlerApplication.Log.LogString($"O365FiddlerExtention: Current BETA version installed. v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}");
-                                FiddlerApplication.Log.LogString($"O365FiddlerExtention: Newest production version available: v{JsonData.AppVersionAvailable.Major}.{JsonData.AppVersionAvailable.Minor}.{JsonData.AppVersionAvailable.Build}");
                             }
                         }
+                        else
+                        {
+                            // Beta testing is NOT running.
+                            Preferences.UpdateMessage = $"Update Information{Environment.NewLine}----------------" +
+                                $"{Environment.NewLine}BETA testing NOT currently running." +
+                                $"{Environment.NewLine}You should update from this beta build to the latest production build" +
+                                $"{Environment.NewLine}Currently using beta version: v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}" +
+                                $"{Environment.NewLine}Newest production version available: v{JsonData.AppVersionAvailable.Major}.{JsonData.AppVersionAvailable.Minor}.{JsonData.AppVersionAvailable.Build}" +
+                                $"{Environment.NewLine}{Environment.NewLine}" +
+                                $"Download the latest version: {Environment.NewLine}{Preferences.InstallerURL}{Environment.NewLine}{Environment.NewLine}";
+                            FiddlerApplication.Log.LogString($"O365FiddlerExtention: BETA testing NOT currently running.");
+                            FiddlerApplication.Log.LogString($"O365FiddlerExtention: You should update from this beta build to the latest production build.");
+                            FiddlerApplication.Log.LogString($"O365FiddlerExtention: Current BETA version installed. v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}");
+                            FiddlerApplication.Log.LogString($"O365FiddlerExtention: Newest production version available: v{JsonData.AppVersionAvailable.Major}.{JsonData.AppVersionAvailable.Minor}.{JsonData.AppVersionAvailable.Build}");
+                        }
+                    }
 
-                    //}
                 }
                 catch (Exception ex)
                 {

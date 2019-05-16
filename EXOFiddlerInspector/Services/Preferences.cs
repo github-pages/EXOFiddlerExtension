@@ -38,7 +38,7 @@ namespace EXOFiddlerInspector.Services
         {
             ExtensionEnabled = true;
             //AppLoggingEnabled = true;
-            HighlightOutlookOWAOnlyEnabled = true;
+            //HighlightOutlookOWAOnlyEnabled = true;
             IsLoadSaz = false;
             //ColumnsAllEnabled = true;
 
@@ -72,32 +72,6 @@ namespace EXOFiddlerInspector.Services
             }
         }
 
-        /*
-        private static bool _appLoggingEnabled;
-        public static bool AppLoggingEnabled
-        {
-            get => _appLoggingEnabled = FiddlerApplication.Prefs.GetBoolPref("extensions.O365FiddlerExtension.AppLoggingEnabled", true);
-            set
-            {
-                _appLoggingEnabled = value;
-                FiddlerApplication.Prefs.SetBoolPref("extensions.O365FiddlerExtension.AppLoggingEnabled", value);
-                MenuUI.Instance.miAppLoggingEnabled.Checked = AppLoggingEnabled;
-            }
-        }
-        */
-
-        private static bool _highlightOutlookOWAOnlyEnabled;
-        public static bool HighlightOutlookOWAOnlyEnabled
-        {
-            get => _highlightOutlookOWAOnlyEnabled = FiddlerApplication.Prefs.GetBoolPref("extensions.O365FiddlerExtension.HighlightOutlookOWAOnlyEnabled", false);
-            set
-            {
-                _highlightOutlookOWAOnlyEnabled = value;
-                FiddlerApplication.Prefs.SetBoolPref("extensions.O365FiddlerExtension.HighlightOutlookOWAOnlyEnabled", value);
-                MenuUI.Instance.miHighlightOutlookOWAOnly.Checked = HighlightOutlookOWAOnlyEnabled;
-            }
-        }
-
         private static bool _isLoadSaz;
         public static bool IsLoadSaz
         {
@@ -112,13 +86,6 @@ namespace EXOFiddlerInspector.Services
             get => _LoadSazFileName = FiddlerApplication.Prefs.GetStringPref("extensions.O365FiddlerExtension.LoadSazFileName", "");
             set { _LoadSazFileName = value; FiddlerApplication.Prefs.SetStringPref("extensions.O365FiddlerExtension.LoadSazFileName", value); }
         }
-
-        //private static bool _columnsAllEnabled;
-        //public static bool ColumnsAllEnabled
-        //{
-        //    get => _columnsAllEnabled = FiddlerApplication.Prefs.GetBoolPref("extensions.O365FiddlerExtension.enabled", _columnsAllEnabled);
-        //    set { _columnsAllEnabled = value; FiddlerApplication.Prefs.SetBoolPref("extensions.O365FiddlerExtension.enabled", value); }
-        //}
 
         private static Int32 _executionCount;
         public static Int32 ExecutionCount
@@ -197,8 +164,17 @@ namespace EXOFiddlerInspector.Services
         {
             get => NeverWebCall = FiddlerApplication.Prefs.GetBoolPref("extensions.O365FiddlerExtension.NeverWebCall", false);
             set { 
-                // No nothing, honor the setting if set by user.
+                // No nothing by design, honor the setting if set by user.
             }
         }
+
+        public static string _UpdateMessage;
+
+        public static string UpdateMessage
+        {
+            get => UpdateMessage = FiddlerApplication.Prefs.GetStringPref("extensions.O365FiddlerExtension.UpdateMessage", "");
+            set { _UpdateMessage = value; FiddlerApplication.Prefs.SetStringPref("extensions.O365FiddlerExtension.UpdateMessage", value); }
+        }
+        
     }
 }
