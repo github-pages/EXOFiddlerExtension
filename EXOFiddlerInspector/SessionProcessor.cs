@@ -28,10 +28,14 @@ namespace EXOFiddlerInspector
 
         internal Session session { get; set; }
 
-        private string searchTerm;
-        private string RedirectAddress;
-        private int SkipFurtherProcessing;
-        private int FalsePositive;
+        public string searchTerm;
+        public string RedirectAddress;
+        public int SkipFurtherProcessing;
+        public int SkipAuthenticationProcessing;
+        public int FalsePositive;
+        public string wordCountErrorText;
+        public string wordCountFailedText;
+        public string wordCountExceptionText;
 
         public SessionProcessor()
         {
@@ -180,6 +184,7 @@ namespace EXOFiddlerInspector
         {
             // Reset these session counters.
             SkipFurtherProcessing = 0;
+            SkipAuthenticationProcessing = 0;
             FalsePositive = 0;
 
             this.session = session;
@@ -201,34 +206,48 @@ namespace EXOFiddlerInspector
             int wordCountFailed = 0;
             int wordCountException = 0;
 
-            //var JsonRuleset = JsonConvert.DeserializeObject<JsonRulesetType>(LocalJsonData);
-
-            //var JsonRuleset = JsonConvert.DeserializeObject<CheckForAppUpdate.Instance.CheckForRuleSetUpdate.JsonRuleset>(CheckForAppUpdate.Instance.CheckForRuleSetUpdate.);
-
             string LocalJsonData = "";
             string LocalJsonDataFilePath = "";
 
-            // if we wrote an update to the local Json data file, refresh the data from the file, so we use the latest version 
-            // to use in this session.
-            if (Preferences.GetDeveloperMode())
+            if (0 > 1)
             {
-                var updatejsonfile = @"%USERPROFILE%\Documents\Fiddler2\DebugRuleSet.json";
-                LocalJsonDataFilePath = Environment.ExpandEnvironmentVariables(updatejsonfile);
+                // if we wrote an update to the local Json data file, refresh the data from the file, so we use the latest version 
+                // to use in this session.
+                if (Preferences.GetDeveloperMode())
+                {
+                    try
+                    {
+                        var updatejsonfile = @"%USERPROFILE%\Documents\Fiddler2\DebugRuleSet.json";
+                        LocalJsonDataFilePath = Environment.ExpandEnvironmentVariables(updatejsonfile);
+                        LocalJsonData = System.IO.File.ReadAllText(LocalJsonDataFilePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        FiddlerApplication.Log.LogString($"O365FiddlerExtension: SessionProcessor: Local Json (debug) Rule set file load: {ex.Message}");
+                    }
 
-                LocalJsonData = System.IO.File.ReadAllText(LocalJsonDataFilePath);
+                }
+                else
+                {
+                    try
+                    {
+                        var updatejsonfile = @"%USERPROFILE%\Documents\Fiddler2\RuleSet.json";
+                        LocalJsonDataFilePath = Environment.ExpandEnvironmentVariables(updatejsonfile);
+
+                        LocalJsonData = System.IO.File.ReadAllText(LocalJsonDataFilePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        FiddlerApplication.Log.LogString($"O365FiddlerExtension: SessionProcessor: Local Json Rule set file load: {ex.Message}");
+                    }
+
+                }
+
+                // Json deserialized and ready to be wired up. Need to discuss with developer group on the right approach on how to accumplish compiling code from 
+                // either a string or collection of strings, fed by Json data.
+                var JsonRuleset = JsonConvert.DeserializeObject<JsonRulesetType>(LocalJsonData);
             }
-            else
-            {
-                var updatejsonfile = @"%USERPROFILE%\Documents\Fiddler2\RuleSet.json";
-                LocalJsonDataFilePath = Environment.ExpandEnvironmentVariables(updatejsonfile);
-
-                LocalJsonData = System.IO.File.ReadAllText(LocalJsonDataFilePath);
-            }
-
-            // Json deserialized and ready to be wired up. Need to discuss with developer group on the right approach on how to accumplish compiling code from 
-            // either a string or collection of strings, fed by Json data.
-            var JsonRuleset = JsonConvert.DeserializeObject<JsonRulesetType>(LocalJsonData);
-
+            
             #region ColouriseSessionsSwitchStatement
             /////////////////////////////
             //
@@ -266,7 +285,7 @@ namespace EXOFiddlerInspector
                 FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; Connect Tunnel.");
 
                 SkipFurtherProcessing++;
-                return;
+                //return;
             }
             /////////////////////////////
             //
@@ -308,7 +327,11 @@ namespace EXOFiddlerInspector
                     "See ExcludeHttpsRootDomain on https://support.microsoft.com/en-us/help/2212902/unexpected-autodiscover-behavior-when-you-have-registry-settings-under" +
                     Environment.NewLine +
                     Environment.NewLine +
-                    "While the above can be used to work around the issue, the web administrator responsible for the server needs to stop the Apache web server from answering these requests.";
+                    "While the above can be used to work around the issue, the web administrator responsible for the server needs to stop the Apache web server from answering these requests." +
+                    Environment.NewLine +
+                    Environment.NewLine +
+                    "If you are using a hosted web service for your organisation website, you may find it necessary to configure a 'Remote Mail Exchanger' in order to stop your web hosting company " +
+                    "from responding to these Autodiscover requests.";
 
                 this.session["X-SessionType"] = "!Apache Autodiscover!";
 
@@ -379,9 +402,9 @@ namespace EXOFiddlerInspector
 
                             // Increment SkipFurtherProcess for SetSessionType function and return.
                             SkipFurtherProcessing++;
-                            // Break out of the switch statement. No further processing needed here.
+                            SkipAuthenticationProcessing++;
 
-                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.1; {this.session["X-ResponseAlert"]}");
                             // If this is a client access rule, no more session processing needed. Red/Black highlight on sessions needed.
                             break;
                         }
@@ -390,7 +413,7 @@ namespace EXOFiddlerInspector
                         //
                         // 200.2. Outlook MAPI traffic.
                         //
-                        if (this.session.HostnameIs("outlook.office365.com") && (this.session.uriContains("/mapi/emsmdb/?MailboxId=")))
+                        if (this.session.HostnameIs("outlook.office365.com") && (this.session.uriContains("/mapi/")))
                         {
                             this.session["ui-backcolor"] = HTMLColourGreen;
                             this.session["ui-color"] = "black";
@@ -402,9 +425,8 @@ namespace EXOFiddlerInspector
 
                             // Increment SkipFurtherProcess for SetSessionType function and return.
                             SkipFurtherProcessing++;
-                            // Break out of the switch statement.
 
-                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.2; {this.session["X-ResponseAlert"]}");
 
                             // If this is mapi traffic on a HTTP 200 response, everything is good and no more session processing is needed. Break.
                             break;
@@ -417,12 +439,12 @@ namespace EXOFiddlerInspector
                             /*
                             <?xml version="1.0" encoding="utf-8"?>
                             <Autodiscover xmlns="http://schemas.microsoft.com/exchange/autodiscover/responseschema/2006">
-                              <Response xmlns="http://schemas.microsoft.com/exchange/autodiscover/outlook/responseschema/2006a">
+                                <Response xmlns="http://schemas.microsoft.com/exchange/autodiscover/outlook/responseschema/2006a">
                                 <Account>
-                                  <Action>redirectAddr</Action>
-                                  <RedirectAddr>user@contoso.mail.onmicrosoft.com</RedirectAddr>       
+                                    <Action>redirectAddr</Action>
+                                    <RedirectAddr>user@contoso.mail.onmicrosoft.com</RedirectAddr>       
                                 </Account>
-                              </Response>
+                                </Response>
                             </Autodiscover>
                             */
 
@@ -453,8 +475,9 @@ namespace EXOFiddlerInspector
 
                                 // Increment SkipFurtherProcess for SetSessionType function and return.
                                 SkipFurtherProcessing++;
+                                SkipAuthenticationProcessing++;
 
-                                FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                                FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.3; {this.session["X-ResponseAlert"]}");
                             }
                             // Highlight if we got this far and do not have a redirect address which points to
                             // Exchange Online such as: contoso.mail.onmicrosoft.com.
@@ -475,8 +498,9 @@ namespace EXOFiddlerInspector
 
                                 // Increment SkipFurtherProcess for SetSessionType function and return.
                                 SkipFurtherProcessing++;
+                                SkipAuthenticationProcessing++;
 
-                                FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                                FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.3; {this.session["X-ResponseAlert"]}");
                             }
                         }
 
@@ -490,13 +514,13 @@ namespace EXOFiddlerInspector
                             /*
                             <?xml version="1.0" encoding="utf-8"?>
                             <Autodiscover xmlns="http://schemas.microsoft.com/exchange/autodiscover/responseschema/2006">
-                              <Response>
+                                <Response>
                                 <Error Time="12:03:32.8803744" Id="2422600485">
-                                  <ErrorCode>500</ErrorCode>
-                                  <Message>The email address can't be found.</Message>
-                                  <DebugData />
+                                    <ErrorCode>500</ErrorCode>
+                                    <Message>The email address can't be found.</Message>
+                                    <DebugData />
                                 </Error>
-                              </Response>
+                                </Response>
                             </Autodiscover>
                             */
                             this.session["ui-backcolor"] = HTMLColourRed;
@@ -512,8 +536,9 @@ namespace EXOFiddlerInspector
 
                             // Increment SkipFurtherProcess for SetSessionType function and return.
                             SkipFurtherProcessing++;
+                            SkipAuthenticationProcessing++;
 
-                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.4; {this.session["X-ResponseAlert"]}");
                         }
 
                         /////////////////////////////
@@ -539,8 +564,9 @@ namespace EXOFiddlerInspector
 
                                 // Increment SkipFurtherProcess for SetSessionType function and return.
                                 SkipFurtherProcessing++;
+                                SkipAuthenticationProcessing++;
 
-                                FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                                FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.5; {this.session["X-ResponseAlert"]}");
                             }
                         }
 
@@ -565,8 +591,9 @@ namespace EXOFiddlerInspector
 
                                 // Increment SkipFurtherProcess for SetSessionType function and return.
                                 SkipFurtherProcessing++;
+                                SkipAuthenticationProcessing++;
 
-                                FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                                FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.6; {this.session["X-ResponseAlert"]}");
                             }
                             // User cannot create Office 365 groups. Not an error condition in and of itself.
                             else if (this.session.utilFindInResponse("<GroupCreationEnabled>false</GroupCreationEnabled>", false) > 1)
@@ -581,8 +608,9 @@ namespace EXOFiddlerInspector
 
                                 // Increment SkipFurtherProcess for SetSessionType function and return.
                                 SkipFurtherProcessing++;
+                                SkipAuthenticationProcessing++;
 
-                                FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                                FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.6; {this.session["X-ResponseAlert"]}");
                             }
                             // Did not see the expected keyword in the response body. This is the error condition.
                             else
@@ -597,133 +625,123 @@ namespace EXOFiddlerInspector
 
                                 // Increment SkipFurtherProcess for SetSessionType function and return.
                                 SkipFurtherProcessing++;
+                                SkipAuthenticationProcessing++;
 
-                                FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                                FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.6; {this.session["X-ResponseAlert"]}");
                             }
                         }
 
                         /////////////////////////////
                         //
-                        // 200.99. All other specific scenarios, fall back to looking for errors lurking in HTTP 200 OK responses.
-                        else
+                        // 200.7. SAML Token Parser.
+                        //
+                        if (this.session.utilFindInResponse("Issuer=", false) > 1 &&
+                            this.session.utilFindInResponse("Attribute AttributeName=", false) > 1 &&
+                            this.session.utilFindInResponse("NameIdentifier Format=", false) > 1 &&
+                            this.session.utilFindInResponse("Attribute AttributeName=", false) > 1)
                         {
-                            // Only fire the Linq response body word split and keyword search if:
-                            // HTTP200SkipLogic has not been incremented above = Session has been classified as something else and this is not necessary.
-                            // OR...
-                            // All SkipFurtherProcessing should return, however just in case they don't leaving logic as it is.
-                            if (SkipFurtherProcessing == 0)
+                            this.session["ui-backcolor"] = HTMLColourGreen;
+                            this.session["ui-color"] = "black";
+                            this.session["X-SessionType"] = "SAML Token Parser";
+
+                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.7; SAML Token Parser.");
+                            break;
+                        }
+
+                        /////////////////////////////
+                        //
+                        // 200.99. All other specific scenarios, fall back to looking for errors lurking in HTTP 200 OK responses.
+
+                        // Only fire the Linq response body word split and keyword search if:
+                        // HTTP200SkipLogic has not been incremented above = Session has been classified as something else and this is not necessary.
+                        // OR...
+                        // All SkipFurtherProcessing should return, however just in case they don't leaving logic as it is.
+                        if (SkipFurtherProcessing == 0)
+                        {
+                            // Count the matches, which executes the query.  
+                            wordCountError = SearchSessionForWord(this.session, "Error");
+
+                            wordCountFailed = SearchSessionForWord(this.session, "Failed");
+
+                            wordCountException = SearchSessionForWord(this.session, "Exception");
+
+                            // If either the keyword searches give us a result.
+                            if (SearchSessionForWord(this.session, "Error") > 0 || SearchSessionForWord(this.session, "Failed") > 0 || SearchSessionForWord(this.session, "Exception") > 0)
                             {
-                                string wordCountErrorText;
-                                string wordCountFailedText;
-                                string wordCountExceptionText;
-
-                                // Count the occurrences of common search terms match up to certain HTTP response codes to highlight certain scenarios.
-                                //
-                                // https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/linq/how-to-count-occurrences-of-a-word-in-a-string-linq
-                                //
-
-                                string text200 = this.session.ToString();
-
-                                //Convert the string into an array of words  
-                                string[] source200 = text200.Split(new char[] { '.', '?', '!', ' ', ';', ':', ',' }, StringSplitOptions.RemoveEmptyEntries);
-
-                                // Create the query. Use ToLowerInvariant to match "data" and "Data"   
-                                var matchQuery200 = from word in source200
-                                                    where word.ToLowerInvariant() == searchTerm.ToLowerInvariant()
-                                                    select word;
-
-                                searchTerm = "Error";
-
-                                // Count the matches, which executes the query.  
-                                wordCountError = matchQuery200.Count();
-
-                                searchTerm = "failed";
-
-                                // Count the matches, which executes the query.  
-                                wordCountFailed = matchQuery200.Count();
-
-                                searchTerm = "exception";
-
-                                // Count the matches, which executes the query.  
-                                wordCountException = matchQuery200.Count();
-
-                                // If either the keyword searches give us a result.
-                                if (wordCountError > 0 || wordCountFailed > 0 || wordCountException > 0)
+                                if (wordCountError == 1)
                                 {
-                                    if (wordCountError == 1)
-                                    {
-                                        wordCountErrorText = wordCountError + " time.";
-                                    }
-                                    else
-                                    {
-                                        wordCountErrorText = wordCountError + " times.";
-                                    }
-
-                                    if (wordCountFailed == 1)
-                                    {
-                                        wordCountFailedText = wordCountFailed + " time.";
-                                    }
-                                    else
-                                    {
-                                        wordCountFailedText = wordCountFailed + " times.";
-                                    }
-
-                                    if (wordCountException == 1)
-                                    {
-                                        wordCountExceptionText = wordCountException + " time.";
-                                    }
-                                    else
-                                    {
-                                        wordCountExceptionText = wordCountException + " times.";
-                                    }
-
-                                    // Special attention to HTTP 200's where the keyword 'error' or 'failed' is found.
-                                    // Red text on black background.
-                                    this.session["ui-backcolor"] = "black";
-                                    this.session["ui-color"] = "red";
-                                    this.session["X-SessionType"] = "!FAILURE LURKING!";
-
-                                    this.session["X-ResponseAlert"] = "!'error', 'failed' or 'exception' found in respone body!";
-                                    this.session["X-ResponseComments"] = "HTTP 200: Errors or failures found in response body. " +
-                                        "Check the Raw tab, click 'View in Notepad' button bottom right, and search for error in the response to review." +
-                                        Environment.NewLine +
-                                        Environment.NewLine +
-                                        "After splitting all words in the response body the following were found:" +
-                                        Environment.NewLine +
-                                        Environment.NewLine +
-                                        "Keyword 'Error' found " + wordCountErrorText +
-                                        Environment.NewLine +
-                                        "Keyword 'Failed' found " + wordCountFailedText +
-                                        Environment.NewLine +
-                                        "Keyword 'Exception' found " + wordCountExceptionText;
-
-                                    FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                                    wordCountErrorText = wordCountError + " time.";
                                 }
                                 else
                                 {
-                                    // All good.
-                                    this.session["ui-backcolor"] = HTMLColourGreen;
-                                    this.session["ui-color"] = "black";
-
-                                    this.session["X-ResponseAlert"] = "No failures keywords detected in respone body.";
-                                    this.session["X-ResponseComments"] = "No failures keywords ('error', 'failed' or 'exception') detected in respone body.";
-
-                                    FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                                    wordCountErrorText = wordCountError + " times.";
                                 }
+
+                                if (wordCountFailed == 1)
+                                {
+                                    wordCountFailedText = wordCountFailed + " time.";
+                                }
+                                else
+                                {
+                                    wordCountFailedText = wordCountFailed + " times.";
+                                }
+
+                                if (wordCountException == 1)
+                                {
+                                    wordCountExceptionText = wordCountException + " time.";
+                                }
+                                else
+                                {
+                                    wordCountExceptionText = wordCountException + " times.";
+                                }
+
+                                // Special attention to HTTP 200's where the keyword 'error' or 'failed' is found.
+                                // Red text on black background.
+                                this.session["ui-backcolor"] = "black";
+                                this.session["ui-color"] = "red";
+                                this.session["X-SessionType"] = "!FAILURE LURKING!";
+
+                                this.session["X-ResponseAlert"] = "!'error', 'failed' or 'exception' found in respone body!";
+                                this.session["X-ResponseComments"] = "HTTP 200: Errors or failures found in response body. " +
+                                    "Check the Raw tab, click 'View in Notepad' button bottom right, and search for error in the response to review." +
+                                    Environment.NewLine +
+                                    Environment.NewLine +
+                                    "After splitting all words in the response body the following were found:" +
+                                    Environment.NewLine +
+                                    Environment.NewLine +
+                                    "Keyword 'Error' found " + wordCountErrorText +
+                                    Environment.NewLine +
+                                    "Keyword 'Failed' found " + wordCountFailedText +
+                                    Environment.NewLine +
+                                    "Keyword 'Exception' found " + wordCountExceptionText;
+
+                                FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.99; {this.session["X-ResponseAlert"]}");
                             }
                             else
                             {
-                                // Mark the remaining sessions as yellow, not detected.
-                                if (string.IsNullOrEmpty(this.session["UI-BACKCOLOR"]) && string.IsNullOrEmpty(this.session["UI-COLOR"]))
-                                {
-                                    this.session["ui-backcolor"] = "Yellow";
-                                    this.session["ui-color"] = "black";
+                                // All good.
+                                this.session["ui-backcolor"] = HTMLColourGreen;
+                                this.session["ui-color"] = "black";
 
-                                    this.session["X-ResponseAlert"] = "Undefined";
-                                    this.session["X-ResponseComments"] = "Undefined";
+                                this.session["X-ResponseAlert"] = "No failures keywords detected in respone body.";
+                                this.session["X-ResponseComments"] = "No failures keywords ('error', 'failed' or 'exception') detected in respone body.";
 
-                                    FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
-                                }
+                                FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.99; {this.session["X-ResponseAlert"]}");
+                            }
+                        }
+                        else
+                        {
+                            // Mark the remaining sessions as yellow, not detected.
+                            if (string.IsNullOrEmpty(this.session["UI-BACKCOLOR"]) && string.IsNullOrEmpty(this.session["UI-COLOR"]))
+                            {
+                                this.session["ui-backcolor"] = "Yellow";
+                                this.session["ui-color"] = "black";
+
+                                this.session["X-ResponseAlert"] = "Undefined";
+                                this.session["X-ResponseComments"] = "Undefined";
+
+                                FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.99; {this.session["X-ResponseAlert"]}");
+                                SkipFurtherProcessing++;
                             }
                         }
                         //
@@ -814,6 +832,7 @@ namespace EXOFiddlerInspector
 
                                 // Increment SkipFurtherProcess for SetSessionType function and return.
                                 SkipFurtherProcessing++;
+                                SkipAuthenticationProcessing++;
                             }
                             else if (this.session.host.Contains(".mail.onmicrosoft.com"))
                             {
@@ -979,14 +998,15 @@ namespace EXOFiddlerInspector
                             this.session["X-SessionType"] = "!WEB PROXY BLOCK!";
 
                             this.session["X-ResponseAlert"] = "!HTTP 403 Access Denied!";
-                            this.session["X-ResponseComments"] = "HTTP 403: Forbidden. Is your firewall or web proxy blocking Outlook connectivity? " + Environment.NewLine +
+                            this.session["X-ResponseComments"] = "HTTP 403: Forbidden. Is your firewall or web proxy blocking Office 365 client connectivity? " + Environment.NewLine +
                                 "To fire this message a HTTP 403 response code was detected and 'Access Denied' was found in the response body." + Environment.NewLine +
                                 "Check the Raw and WebView tabs, do you see anything which indicates traffic is blocked?";
 
                             // Increment SkipFurtherProcess for SetSessionType function and return.
                             SkipFurtherProcessing++;
+                            SkipAuthenticationProcessing++;
 
-                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.1; {this.session["X-ResponseAlert"]}");
                         }
                         else
                         {
@@ -1019,7 +1039,7 @@ namespace EXOFiddlerInspector
                                     "Validate with: Get-Mailbox service-account@domain.com | FL Languages";
                             }
 
-                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.99; {this.session["X-ResponseAlert"]}");
                         }
                         //
                         /////////////////////////////
@@ -1117,14 +1137,21 @@ namespace EXOFiddlerInspector
                         //
                         // HTTP 456: Multi-Factor Required.
                         //
+
                         /////////////////////////////
-                        if (this.session.utilFindInResponse("you must use multi-factor authentication", false) > 1)
+                        //
+                        // HTTP 456.1
+
+                        // Pre MFA enrollment. MFA enforced, Modern Authentication not enabled.
+                        int PreMFAKeyWord = SearchSessionForWord(this.session, "AADSTS50079");
+
+                        if (PreMFAKeyWord > 0)
                         {
                             this.session["ui-backcolor"] = HTMLColourRed;
                             this.session["ui-color"] = "black";
                             this.session["X-SessionType"] = "!Multi-Factor Auth!";
 
-                            this.session["X-ResponseAlert"] = "HTTP 456 Multi-Factor Authentication";
+                            this.session["X-ResponseAlert"] = "HTTP 456.1 Multi-Factor Authentication: Must use or enroll in MFA.";
                             this.session["X-ResponseComments"] = "HTTP 456: See details on Raw tab. Look for the presence of 'you must use multi-factor authentication'." +
                                 Environment.NewLine +
                                 Environment.NewLine +
@@ -1139,15 +1166,25 @@ namespace EXOFiddlerInspector
                             // Increment SkipFurtherProcess for SetSessionType function and return.
                             SkipFurtherProcessing++;
 
-                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.1; {this.session["X-ResponseAlert"]}");
+
+                            // break out if this this is the result.
+                            break;
                         }
-                        else if (this.session.utilFindInResponse("oauth_not_available", false) > 1)
+
+                        /////////////////////////////
+                        //
+                        // HTTP 456.2
+
+                        // Post MFA enrollment. MFA enforced, Modern Authentication not enabled.
+                        PreMFAKeyWord = SearchSessionForWord(this.session, "AADSTS50076");
+                        if (PreMFAKeyWord > 0)
                         {
                             this.session["ui-backcolor"] = HTMLColourRed;
                             this.session["ui-color"] = "black";
                             this.session["X-SessionType"] = "!Multi-Factor Auth!";
 
-                            this.session["X-ResponseAlert"] = "HTTP 456 Multi-Factor Authentication";
+                            this.session["X-ResponseAlert"] = "HTTP 456 Multi-Factor Authentication: oauth_not_available";
                             this.session["X-ResponseComments"] = "HTTP 456: See details on Raw tab. Look for the presence of 'oauth_not_available'." +
                                 Environment.NewLine +
                                 Environment.NewLine +
@@ -1162,28 +1199,38 @@ namespace EXOFiddlerInspector
                             // Increment SkipFurtherProcess for SetSessionType function and return.
                             SkipFurtherProcessing++;
 
-                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
-                        }
-                        else
-                        {
-                            this.session["ui-backcolor"] = HTMLColourOrange;
-                            this.session["ui-color"] = "black";
-                            this.session["X-SessionType"] = "Multi-Factor Auth?";
+                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.2; {this.session["X-ResponseAlert"]}");
 
-                            this.session["X-ResponseAlert"] = "HTTP 456 Multi-Factor Authentication?";
-                            this.session["X-ResponseComments"] = "HTTP 456: See details on Raw tab. Is Modern Authentication disabled?" +
-                                Environment.NewLine +
-                                Environment.NewLine +
-                                "This has been seen where users have MFA enabled/enforced, but Modern Authentication is not enabled in the Office 365 service being connected to" +
-                                Environment.NewLine +
-                                Environment.NewLine +
-                                "See https://support.office.com/en-us/article/Enable-or-disable-modern-authentication-in-Exchange-Online-58018196-f918-49cd-8238-56f57f38d662" +
-                                Environment.NewLine +
-                                Environment.NewLine +
-                                "https://social.technet.microsoft.com/wiki/contents/articles/36101.office-365-enable-modern-authentication.aspx";
-
-                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                            // break out if this this is the result.
+                            break;
                         }
+
+                        /////////////////////////////
+                        //
+                        // HTTP 456.99
+                        
+                        // Any other MFA related session.
+                        this.session["ui-backcolor"] = HTMLColourOrange;
+                        this.session["ui-color"] = "black";
+                        this.session["X-SessionType"] = "Multi-Factor Auth?";
+
+                        this.session["X-ResponseAlert"] = "HTTP 456 Multi-Factor Authentication?";
+                        this.session["X-ResponseComments"] = "HTTP 456: See details on Raw tab. Is Modern Authentication disabled?" +
+                            Environment.NewLine +
+                            Environment.NewLine +
+                            "This has been seen where users have MFA enabled/enforced, but Modern Authentication is not enabled in the Office 365 service being connected to" +
+                            Environment.NewLine +
+                            Environment.NewLine +
+                            "See https://support.office.com/en-us/article/Enable-or-disable-modern-authentication-in-Exchange-Online-58018196-f918-49cd-8238-56f57f38d662" +
+                            Environment.NewLine +
+                            Environment.NewLine +
+                            "https://social.technet.microsoft.com/wiki/contents/articles/36101.office-365-enable-modern-authentication.aspx";
+
+                        // Increment SkipFurtherProcess for SetSessionType function and return.
+                        SkipFurtherProcessing++;
+
+                        FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.99; {this.session["X-ResponseAlert"]}");
+                        
                         //
                         /////////////////////////////
                         break;
@@ -1251,7 +1298,7 @@ namespace EXOFiddlerInspector
                             // Increment SkipFurtherProcess for SetSessionType function and return.
                             SkipFurtherProcessing++;
 
-                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.1; {this.session["X-ResponseAlert"]}");
                         }
 
                         /////////////////////////////
@@ -1282,7 +1329,7 @@ namespace EXOFiddlerInspector
                             // Increment SkipFurtherProcess for SetSessionType function and return.
                             SkipFurtherProcessing++;
 
-                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.2; {this.session["X-ResponseAlert"]}");
                         }
 
                         /////////////////////////////
@@ -1323,7 +1370,7 @@ namespace EXOFiddlerInspector
                             // Increment SkipFurtherProcess for SetSessionType function and return.
                             SkipFurtherProcessing++;
 
-                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.3; {this.session["X-ResponseAlert"]}");
                         }
 
                         /////////////////////////////
@@ -1368,7 +1415,7 @@ namespace EXOFiddlerInspector
                             // Increment SkipFurtherProcess for SetSessionType function and return.
                             SkipFurtherProcessing++;
 
-                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.4; {this.session["X-ResponseAlert"]}");
                         }
 
                         /////////////////////////////
@@ -1389,7 +1436,7 @@ namespace EXOFiddlerInspector
                             // Increment SkipFurtherProcess for SetSessionType function and return.
                             SkipFurtherProcessing++;
 
-                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.5; {this.session["X-ResponseAlert"]}");
                         }
 
                         /////////////////////////////
@@ -1406,7 +1453,7 @@ namespace EXOFiddlerInspector
                             this.session["X-ResponseComments"] = "Potential to cause the issue you are investigating. " +
                                 "Do you see expected responses beyond this session in the trace? Is this an Exchange On - Premise, Exchange Online or other device ?";
 
-                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.99; {this.session["X-ResponseAlert"]}");
                         }
                         //
                         /////////////////////////////
@@ -1491,7 +1538,7 @@ namespace EXOFiddlerInspector
                             // Increment SkipFurtherProcess for SetSessionType function and return.
                             SkipFurtherProcessing++;
 
-                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.1; {this.session["X-ResponseAlert"]}");
                         }
                         /////////////////////////////
                         //
@@ -1520,7 +1567,7 @@ namespace EXOFiddlerInspector
 
                             SkipFurtherProcessing++;
 
-                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.99; {this.session["X-ResponseAlert"]}");
                         }
                         //
                         /////////////////////////////
@@ -1548,7 +1595,7 @@ namespace EXOFiddlerInspector
 
                             SkipFurtherProcessing++;
 
-                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.1; {this.session["X-ResponseAlert"]}");
                         }
 
                         /////////////////////////////
@@ -1566,7 +1613,7 @@ namespace EXOFiddlerInspector
 
                             SkipFurtherProcessing++;
 
-                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.99; {this.session["X-ResponseAlert"]}");
                             //
                             /////////////////////////////
                         }
@@ -1587,7 +1634,7 @@ namespace EXOFiddlerInspector
 
                         SkipFurtherProcessing++;
 
-                        FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                        FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.default(undefined); {this.session["X-ResponseAlert"]}");
 
                         break;
                         //
@@ -1654,46 +1701,54 @@ namespace EXOFiddlerInspector
 
             #region SetSessionType
 
-            // Finish processing in this function for this session if we have incremented the SkipFurtherProcessing int.
-            if (SkipFurtherProcessing > 0)
-                return;
+            // Only run on sessions which have not been marked for SkipFurtherProcessing.
+            if (SkipFurtherProcessing == 0)
+            {
+                FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; SetSessionType Processing.");
 
-            // If the above does not fire, then its likely the traffic does not have a rule which fired on it.
-            // The below attempts to fill in as many gaps as possible in these scenarios.
-        
-            // Free/Busy.
-            if (this.session.fullUrl.Contains("WSSecurity")) { this.session["X-SessionType"] = "Free/Busy"; }
-            else if (this.session.fullUrl.Contains("GetUserAvailability")) { this.session["X-SessionType"] = "Free/Busy"; }
-            else if (this.session.utilFindInResponse("GetUserAvailability", false) > 1) { this.session["X-SessionType"] = "Free/Busy"; }
-            // EWS.
-            else if (this.session.fullUrl.Contains("outlook.office365.com/EWS")) { this.session["X-SessionType"] = "EXO EWS"; }
-            // Generic Office 365.
-            else if (this.session.fullUrl.Contains(".onmicrosoft.com") && (this.session.LocalProcess.Contains("outlook") && (!(this.session.hostname.Contains("live.com"))))) { this.session["X-SessionType"] = "Exchange Online"; }
-            else if (this.session.fullUrl.Contains("outlook.office365.com")) { this.session["X-SessionType"] = "Office 365"; }
-            else if (this.session.fullUrl.Contains("outlook.office.com")) { this.session["X-SessionType"] = "Office 365"; }
-            // Office 365 Authentication.
-            else if (this.session.url.Contains("login.microsoftonline.com") || this.session.HostnameIs("login.microsoftonline.com")) { this.session["X-SessionType"] = "Office 365 Authentication"; }
-            // ADFS Authentication.
-            else if (this.session.fullUrl.Contains("adfs/services/trust/mex")) { this.session["X-SessionType"] = "ADFS Authentication"; }
-            // Local process.
-            else if (this.session.LocalProcess.Contains("outlook")) { this.session["X-SessionType"] = "Outlook"; }
-            else if (this.session.LocalProcess.Contains("Teams")) { this.session["X-SessionType"] = "Teams"; }
-            else if (this.session.LocalProcess.Contains("OneDrive")) { this.session["X-SessionType"] = "OneDrive"; }
-            else if (this.session.LocalProcess.Contains("OneNote")) { this.session["X-SessionType"] = "OneNote"; } 
-            else if (this.session.LocalProcess.Contains("Word")) { this.session["X-SessionType"] = "Word"; }
-            else if (this.session.LocalProcess.Contains("Excel")) { this.session["X-SessionType"] = "Excel"; }
-            else if (this.session.LocalProcess.Contains("PowerPoint")) { this.session["X-SessionType"] = "PowerPoint"; }
-            else if (this.session.LocalProcess.Contains("Access")) { this.session["X-SessionType"] = "Access"; }
-            else if (this.session.LocalProcess.Contains("Lync")) { this.session["X-SessionType"] = "Lync"; }
-            else if (this.session.LocalProcess.Contains("skype")) { this.session["X-SessionType"] = "Skype"; }
-            else if (this.session.LocalProcess.Contains("searchprotocolhost")) { this.session["X-SessionType"] = "SearchProtocolHost"; }
-            else if (this.session.LocalProcess.Contains("w3wp")) { this.session["X-SessionType"] = "Remote Capture"; }
-            else if (this.session.LocalProcess.Contains("iexplore")) { this.session["X-SessionType"] = "Internet Explorer"; }
-            else if (this.session.LocalProcess.Contains("chrome")) { this.session["X-SessionType"] = "Chrome"; }
-            else if (this.session.LocalProcess.Contains("firefox")) { this.session["X-SessionType"] = "Firefox"; }
-            else if (this.session.LocalProcess.Contains("edge")) { this.session["X-SessionType"] = "Edge"; }
+                if (this.session.fullUrl.Contains("WSSecurity")) { this.session["X-SessionType"] = "Free/Busy"; }
+                else if (this.session.fullUrl.Contains("GetUserAvailability")) { this.session["X-SessionType"] = "Free/Busy"; }
+                else if (this.session.utilFindInResponse("GetUserAvailability", false) > 1) { this.session["X-SessionType"] = "Free/Busy"; }
+                // EWS.
+                else if (this.session.fullUrl.Contains("outlook.office365.com/EWS")) { this.session["X-SessionType"] = "EXO EWS"; }
+                // Generic Office 365.
+                else if (this.session.fullUrl.Contains(".onmicrosoft.com") && (this.session.LocalProcess.Contains("outlook") && (!(this.session.hostname.Contains("live.com"))))) { this.session["X-SessionType"] = "Exchange Online"; }
+                else if (this.session.fullUrl.Contains("outlook.office365.com")) { this.session["X-SessionType"] = "Office 365"; }
+                else if (this.session.fullUrl.Contains("outlook.office.com")) { this.session["X-SessionType"] = "Office 365"; }
+                // Office 365 Authentication.
+                else if (this.session.url.Contains("login.microsoftonline.com") || this.session.HostnameIs("login.microsoftonline.com")) { this.session["X-SessionType"] = "Office 365 Authentication"; }
+                else if (this.session.host.Contains("login.windows.net") || this.session.url.Contains("getfederationprovider")) { this.session["X-SessionType"] = "Office 365 Authentication"; }
+                // ADFS Authentication.
+                else if (this.session.fullUrl.Contains("adfs/services/trust/mex") || this.session.fullUrl.Contains("adfs/ls")) { this.session["X-SessionType"] = "ADFS Authentication"; }
+                // Autodiscover.
+                else if (this.session.url.Contains("autodiscover")) { this.session["X-SessionType"] = "Autodiscover"; }
+                // Local process.
+                else if (this.session.LocalProcess.Contains("outlook")) { this.session["X-SessionType"] = "Outlook"; }
+                else if (this.session.LocalProcess.Contains("Teams")) { this.session["X-SessionType"] = "Teams"; }
+                else if (this.session.LocalProcess.Contains("OneDrive")) { this.session["X-SessionType"] = "OneDrive"; }
+                else if (this.session.LocalProcess.Contains("OneNote")) { this.session["X-SessionType"] = "OneNote"; }
+                else if (this.session.LocalProcess.Contains("Word")) { this.session["X-SessionType"] = "Word"; }
+                else if (this.session.LocalProcess.Contains("Excel")) { this.session["X-SessionType"] = "Excel"; }
+                else if (this.session.LocalProcess.Contains("PowerPoint")) { this.session["X-SessionType"] = "PowerPoint"; }
+                else if (this.session.LocalProcess.Contains("Access")) { this.session["X-SessionType"] = "Access"; }
+                else if (this.session.LocalProcess.Contains("Lync")) { this.session["X-SessionType"] = "Lync"; }
+                else if (this.session.LocalProcess.Contains("skype")) { this.session["X-SessionType"] = "Skype"; }
+                else if (this.session.LocalProcess.Contains("searchprotocolhost")) { this.session["X-SessionType"] = "SearchProtocolHost"; }
+                else if (this.session.LocalProcess.Contains("w3wp")) { this.session["X-SessionType"] = "Remote Capture"; }
+                else if (this.session.LocalProcess.Contains("iexplore")) { this.session["X-SessionType"] = "Internet Explorer"; }
+                else if (this.session.LocalProcess.Contains("chrome")) { this.session["X-SessionType"] = "Chrome"; }
+                else if (this.session.LocalProcess.Contains("firefox")) { this.session["X-SessionType"] = "Firefox"; }
+                else if (this.session.LocalProcess.Contains("edge")) { this.session["X-SessionType"] = "Edge"; }
+                else
+                {
+                    { this.session["X-SessionType"] = "Undefined"; }
+                }
+            }
+            else
+            {
+                FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; SetSessionType Skipped.");
+            }
             #endregion
-
         }
 
         #region SetResponseServer
@@ -1742,9 +1797,11 @@ namespace EXOFiddlerInspector
         }
         #endregion
 
+        #region SearchSessionForWord
         /// <summary>
         /// Used specifically for Authentication sessions.
         /// Inclusion of '"' may not be compatible with say HTTP 503 response body word split.
+        /// 5/21/2019 added '<','>'
         /// </summary>
         /// <param name="session"></param>
         /// <param name="searchTerm"></param>
@@ -1761,7 +1818,7 @@ namespace EXOFiddlerInspector
             string text = this.session.ToString();
 
             //Convert the string into an array of words  
-            string[] source = text.Split(new char[] { '.', '?', '!', ' ', ';', ':', ',', '"' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] source = text.Split(new char[] { '<','>','.', '?', '!', ' ', ';', ':', ',', '"' }, StringSplitOptions.RemoveEmptyEntries);
 
             // Create the query. Use ToLowerInvariant to match "data" and "Data"   
             var matchQuery = from word in source
@@ -1775,6 +1832,7 @@ namespace EXOFiddlerInspector
 
             return wordCount;
         }
+        #endregion
 
         public void SAMLParserFieldsNoData()
         {
@@ -1831,9 +1889,23 @@ namespace EXOFiddlerInspector
             //if (this.session.RequestHeaders["Authorization"].Length == 0)
 
             //FiddlerApplication.Log.LogString($"O365FiddlerExtention: Authentication Test:{this.session.oRequest["Authorization"]}:");
-            if (string.IsNullOrEmpty(this.session.oRequest["Authorization"]))
+            if (this.session.utilFindInResponse("Issuer=", false) > 1 &&
+                this.session.utilFindInResponse("Attribute AttributeName=", false) > 1 &&
+                this.session.utilFindInResponse("NameIdentifier Format=", false) > 1 &&
+                this.session.utilFindInResponse("Attribute AttributeName=", false) > 1)
+            {
+                // Make sure the SAML parser gets through the return below.
+            }
+            else if (string.IsNullOrEmpty(this.session.oRequest["Authorization"]))
             {
                 this.session["X-Authentication"] = "No Auth Headers";
+                FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; SetAuthentication: No Auth Headers");
+                return;
+            }
+
+            if (SkipAuthenticationProcessing > 0)
+            {
+                FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; SetAuthentication: SkipProcessing");
                 return;
             }
 
