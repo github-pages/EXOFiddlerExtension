@@ -1732,14 +1732,14 @@ namespace EXOFiddlerInspector
                 else if (this.session.url.Contains("autodiscover")) { this.session["X-SessionType"] = "Autodiscover"; }
                 // Local process.
                 else if (this.session.LocalProcess.Contains("outlook")) { this.session["X-SessionType"] = "Outlook"; }
-                else if (this.session.LocalProcess.Contains("Teams")) { this.session["X-SessionType"] = "Teams"; }
-                else if (this.session.LocalProcess.Contains("OneDrive")) { this.session["X-SessionType"] = "OneDrive"; }
-                else if (this.session.LocalProcess.Contains("OneNote")) { this.session["X-SessionType"] = "OneNote"; }
-                else if (this.session.LocalProcess.Contains("Word")) { this.session["X-SessionType"] = "Word"; }
-                else if (this.session.LocalProcess.Contains("Excel")) { this.session["X-SessionType"] = "Excel"; }
-                else if (this.session.LocalProcess.Contains("PowerPoint")) { this.session["X-SessionType"] = "PowerPoint"; }
-                else if (this.session.LocalProcess.Contains("Access")) { this.session["X-SessionType"] = "Access"; }
-                else if (this.session.LocalProcess.Contains("Lync")) { this.session["X-SessionType"] = "Lync"; }
+                else if (this.session.LocalProcess.Contains("teams")) { this.session["X-SessionType"] = "Teams"; }
+                else if (this.session.LocalProcess.Contains("onedrive")) { this.session["X-SessionType"] = "OneDrive"; }
+                else if (this.session.LocalProcess.Contains("onenote")) { this.session["X-SessionType"] = "OneNote"; }
+                else if (this.session.LocalProcess.Contains("winword")) { this.session["X-SessionType"] = "Word"; }
+                else if (this.session.LocalProcess.Contains("excel")) { this.session["X-SessionType"] = "Excel"; }
+                else if (this.session.LocalProcess.Contains("powerpnt")) { this.session["X-SessionType"] = "PowerPoint"; }
+                else if (this.session.LocalProcess.Contains("msaccess")) { this.session["X-SessionType"] = "Access"; }
+                else if (this.session.LocalProcess.Contains("lync")) { this.session["X-SessionType"] = "Lync"; }
                 else if (this.session.LocalProcess.Contains("skype")) { this.session["X-SessionType"] = "Skype"; }
                 else if (this.session.LocalProcess.Contains("searchprotocolhost")) { this.session["X-SessionType"] = "SearchProtocolHost"; }
                 else if (this.session.LocalProcess.Contains("w3wp")) { this.session["X-SessionType"] = "Remote Capture"; }

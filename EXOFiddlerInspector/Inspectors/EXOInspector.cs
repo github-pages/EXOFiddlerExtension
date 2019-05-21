@@ -172,14 +172,14 @@ namespace EXOFiddlerInspector.Inspectors
                     this.session.utilDecodeResponse(true);
 
                     if (this.session.LocalProcess.Contains("Outlook") ||
-                    this.session.LocalProcess.Contains("Teams") ||
-                    this.session.LocalProcess.Contains("OneDrive") ||
-                    this.session.LocalProcess.Contains("OneNote") ||
-                    this.session.LocalProcess.Contains("Word") ||
-                    this.session.LocalProcess.Contains("Excel") ||
-                    this.session.LocalProcess.Contains("PowerPoint") ||
-                    this.session.LocalProcess.Contains("Access") ||
-                    this.session.LocalProcess.Contains("Lync") ||
+                    this.session.LocalProcess.Contains("teams") ||
+                    this.session.LocalProcess.Contains("onedrive") ||
+                    this.session.LocalProcess.Contains("onenote") ||
+                    this.session.LocalProcess.Contains("winword") ||
+                    this.session.LocalProcess.Contains("excel") ||
+                    this.session.LocalProcess.Contains("powerpnt") ||
+                    this.session.LocalProcess.Contains("msaccess") ||
+                    this.session.LocalProcess.Contains("lync") ||
                     this.session.LocalProcess.Contains("skype") ||
                     this.session.LocalProcess.Contains("searchprotocolhost") ||
                     this.session.LocalProcess.Contains("iexplore") ||
