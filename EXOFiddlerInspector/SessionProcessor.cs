@@ -1896,6 +1896,8 @@ namespace EXOFiddlerInspector
             // If the session does not contain authorization headers, bail.
             //if (this.session.RequestHeaders["Authorization"].Length == 0)
 
+            #region SAMLParser
+
             //FiddlerApplication.Log.LogString($"O365FiddlerExtention: Authentication Test:{this.session.oRequest["Authorization"]}:");
             if (this.session.utilFindInResponse("Issuer=", false) > 1 &&
                 this.session.utilFindInResponse("Attribute AttributeName=", false) > 1 &&
@@ -2116,6 +2118,8 @@ namespace EXOFiddlerInspector
                     this.session["X-AttributeNameImmutableID"] = "Data points not found for AttributeNameImmutibleID";
                 }
             }
+            #endregion
+            
             // Determine if Modern Authentication is enabled in Exchange Online.
             else if (this.session.oRequest["Authorization"] == "Bearer" || this.session.oRequest["Authorization"] == "Basic")
             {
