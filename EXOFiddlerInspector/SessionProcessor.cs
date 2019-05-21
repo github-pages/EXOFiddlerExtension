@@ -114,6 +114,8 @@ namespace EXOFiddlerInspector
         }
         #endregion
 
+        #region HandleFiddlerAttachDetach
+
         // Event handler so the extension knows whether Fiddler is attached as the system proxy or not.
         // Used when deciding whether to write the SAZ file name into the inspector tab data or not.
         private void HandleFiddlerAttach()
@@ -127,6 +129,7 @@ namespace EXOFiddlerInspector
         {
             Preferences.FiddlerAttached = false;
         }
+        #endregion
 
         #region LoadSAZ
         /// <summary>
@@ -247,8 +250,11 @@ namespace EXOFiddlerInspector
                 // either a string or collection of strings, fed by Json data.
                 var JsonRuleset = JsonConvert.DeserializeObject<JsonRulesetType>(LocalJsonData);
             }
-            
+
             #region ColouriseSessionsSwitchStatement
+
+
+            #region BroadLogic
             /////////////////////////////
             //
             //  Broader code logic for sessions, where the response code cannot be used as in the switch statement.
@@ -340,6 +346,8 @@ namespace EXOFiddlerInspector
                 SkipFurtherProcessing++;
                 return;
             }
+            #endregion
+
             /////////////////////////////
             // If the above is not true, then drop into the switch statement based on individual response codes
             else
@@ -2217,6 +2225,16 @@ namespace EXOFiddlerInspector
 
                 this.session["X-AuthenticationDesc"] = this.session["X-ProcessName"] + " involved in Negotiation Authentication. Likely to be a server running within your network. " +
                     "Check the Raw tab for further information on this server if interested.";
+
+                FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-Authentication"]}");
+            }
+            else if (!(string.IsNullOrEmpty(this.session.oRequest["Authorization"])))
+            {
+                SAMLParserFieldsNoData();
+
+                this.session["X-Authentication"] = "Auth Header Present";
+
+                this.session["X-AuthenticationDesc"] = $"{this.session["X-ProcessName"]} presenting an authorization header to {this.session.hostname}.";
 
                 FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-Authentication"]}");
             }
