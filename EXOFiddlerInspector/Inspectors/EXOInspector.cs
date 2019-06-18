@@ -476,6 +476,7 @@ namespace EXOFiddlerInspector.Inspectors
                     ResultsString.AppendLine($"Attribute Name Immutable Id: {this.session["X-ATTRIBUTENAMEIMMUTABLEID"]}");
                     ResultsString.AppendLine($"Attribute Name UPN: {this.session["X-ATTRIBUTENAMEUPN"]}");
                     ResultsString.AppendLine($"Name Identifier Format: {this.session["X-NAMEIDENTIFIERFORMAT"]}");
+                    ResultsString.AppendLine("");
                     ResultsString.AppendLine("Signing Certificate: Copy and save the below text into a .cer file to view the certificate.");
                     ResultsString.AppendLine("");
                     ResultsString.AppendLine("-----BEGIN CERTIFICATE-----");
