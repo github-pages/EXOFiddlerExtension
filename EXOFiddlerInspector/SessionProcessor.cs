@@ -1706,6 +1706,45 @@ namespace EXOFiddlerInspector
             }
 
             #endregion
+            
+            /*
+            
+            // On testing with Office 365 traffic, FEServer vs. BEserver are not similar enough to make this practical.
+            // Commented out at this time, in case there is another way to achieve this.
+
+            #region FrontendBackendMismatch
+            // Highlight session if the Cafe / front end server in the server is found to not sufficiently match the backend / mailbox server.
+
+            // First make sure both these response headers exist on the session.
+            if (!string.IsNullOrEmpty(this.session.ResponseHeaders["X-FEServer"]) && (!string.IsNullOrEmpty(this.session.ResponseHeaders["X-BEServer"])))
+            {
+                // Next make sure the response on the session is from the cloud.
+                if (this.session.url.Contains("autodiscover-s.outlook.com"))
+                {
+                    // Finally compare the first 4 characters of the server names to determine if we are in the same region.
+                    if (this.session.ResponseHeaders["X-FEServer"].Substring(0, 4) != this.session.ResponseHeaders["X-BEServer"].Substring(0, 4))
+                    {
+                        this.session["ui-backcolor"] = HTMLColourRed;
+                        this.session["ui-color"] = "black";
+
+                        this.session["X-SessionType"] = "!Cafe/Backend Server Mismatch!";
+
+                        this.session["X-ResponseAlert"] = "!Cafe/Backend Server Mismatch!";
+
+                        this.session["X-ResponseComments"] = $"Front end server (X-FEServer) is {this.session.ResponseHeaders["X-FEServer"]} and back end server (X-BEServer) is {this.session.ResponseHeaders["X-BEServer"]}." +
+                            Environment.NewLine +
+                            Environment.NewLine +
+                            "If Multi-Geo is in use in the environment this may be expected behaviour. However, if Multi-Geo is not in use this is a potential issue.";
+
+                        FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+                    }
+                }
+
+                
+            }
+            #endregion
+            */
+            
 
             #region SetSessionType
 
