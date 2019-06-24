@@ -1548,18 +1548,20 @@ namespace EXOFiddlerInspector
 
                             FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.1; {this.session["X-ResponseAlert"]}");
                         }
+
                         // 503.2. MailboxInfoStale.
                         else if (this.session.utilFindInResponse("MailboxInfoStale", false) > 1)
                         {
                             this.session["ui-backcolor"] = HTMLColourRed;
                             this.session["ui-color"] = "black";
 
-                            this.session["X-SessionType"] = "!Service Unavailable!";
+                            this.session["X-SessionType"] = "!MailboxInfoStale!";
 
-                            this.session["X-ResponseAlert"] = "!HTTP 503 Service Unavailable!";
-                            this.session["X-ResponseComments"] = "MailboxInfoStale found in the response. Raise a support case to Microsft to update the location, or attempt to fix with " +
+                            this.session["X-ResponseAlert"] = "!HTTP 503 Service Unavailable! MailboxInfoStale";
+                            this.session["X-ResponseComments"] = "MailboxInfoStale found in the response. Raise a support case to Microsft to update the mailbox location, or attempt to fix with " +
                                 "the New-MoveRequest cmdlet for the mailbox in question.";
                             // Stop right here, do not perform any overrides.
+                            // If we got here, this is the most important aspect on this session.
                             return;
                         }
 
