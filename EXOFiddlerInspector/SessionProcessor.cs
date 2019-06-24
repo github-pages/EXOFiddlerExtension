@@ -1471,7 +1471,7 @@ namespace EXOFiddlerInspector
                         //
                         //  HTTP 503: SERVICE UNAVAILABLE.
                         //
-                        // 503.1. Call out all 503 Service Unavailable as something to focus on.
+                        // 503.1. FederatedStsUnreachable.
                         searchTerm = "FederatedStsUnreachable";
                         //"Service Unavailable"
 
@@ -1548,6 +1548,21 @@ namespace EXOFiddlerInspector
 
                             FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.1; {this.session["X-ResponseAlert"]}");
                         }
+                        // 503.2. MailboxInfoStale.
+                        else if (this.session.utilFindInResponse("MailboxInfoStale", false) > 1)
+                        {
+                            this.session["ui-backcolor"] = HTMLColourRed;
+                            this.session["ui-color"] = "black";
+
+                            this.session["X-SessionType"] = "!Service Unavailable!";
+
+                            this.session["X-ResponseAlert"] = "!HTTP 503 Service Unavailable!";
+                            this.session["X-ResponseComments"] = "MailboxInfoStale found in the response. Raise a support case to Microsft to update the location, or attempt to fix with " +
+                                "the New-MoveRequest cmdlet for the mailbox in question.";
+                            // Stop right here, do not perform any overrides.
+                            return;
+                        }
+
                         /////////////////////////////
                         //
                         // 503.99. Everything else.
