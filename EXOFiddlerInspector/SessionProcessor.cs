@@ -932,6 +932,8 @@ namespace EXOFiddlerInspector
                                 "Check the Headers or Raw tab and the Location to ensure the Autodiscover call is going to the correct place.";
 
                             FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+
+                            return;
                         }
                         else
                         {
