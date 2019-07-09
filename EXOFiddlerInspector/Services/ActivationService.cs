@@ -27,13 +27,14 @@ namespace EXOFiddlerInspector.Services
             }
 
             SessionProcessor.Instance.Initialize();
-
+            /*
             CheckForAppUpdate.Instance.CheckForJsonUpdate();
             if (0 > 1)
             {
                 CheckForAppUpdate.Instance.CheckForRuleSetUpdate();
             }
-
+            */
+            
             // Set LoadSazFileName to null. 
             // Will be populated by Handleloadsaz function in SessionProcessor.cs if LoadSaz event occurs.
             Preferences.LoadSazFileName = null;

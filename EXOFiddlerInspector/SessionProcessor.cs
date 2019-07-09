@@ -43,13 +43,15 @@ namespace EXOFiddlerInspector
 
         public void Initialize()
         {
+            // Always handle OnSaveSaz, regardless of whether extension is currently enabled or not.
+            // Always want to make sure any extension session flags are cleared off of a saved SAZ file.
+            FiddlerApplication.OnSaveSAZ += HandleSaveSaz;
+
             // Stop HandleLoadSaz and further processing if the extension is not enabled.
             if (!Preferences.ExtensionEnabled)
                 return;
 
             FiddlerApplication.OnLoadSAZ += HandleLoadSaz;
-
-            FiddlerApplication.OnSaveSAZ += HandleSaveSaz;
 
             FiddlerApplication.FiddlerAttach += HandleFiddlerAttach;
 
@@ -158,7 +160,7 @@ namespace EXOFiddlerInspector
             // The drawback to this is that if the extension is disabled and a loadsaz event occurs the extension is re-enabled. This may not be what the user wants.
 
             //Preferences.ExtensionEnabled = true;
-            MenuUI.Instance.miEnabled.Checked = Preferences.ExtensionEnabled;
+            //MenuUI.Instance.miEnabled.Checked = Preferences.ExtensionEnabled;
 
             foreach (var session in e.arrSessions)
             {
@@ -208,10 +210,11 @@ namespace EXOFiddlerInspector
             int wordCountError = 0;
             int wordCountFailed = 0;
             int wordCountException = 0;
-
+            
+            /*
             string LocalJsonData = "";
             string LocalJsonDataFilePath = "";
-
+            
             if (0 > 1)
             {
                 // if we wrote an update to the local Json data file, refresh the data from the file, so we use the latest version 
@@ -249,7 +252,9 @@ namespace EXOFiddlerInspector
                 // Json deserialized and ready to be wired up. Need to discuss with developer group on the right approach on how to accumplish compiling code from 
                 // either a string or collection of strings, fed by Json data.
                 var JsonRuleset = JsonConvert.DeserializeObject<JsonRulesetType>(LocalJsonData);
+                
             }
+            */
 
             #region ColouriseSessionsSwitchStatement
 
@@ -1552,17 +1557,20 @@ namespace EXOFiddlerInspector
                         // 503.2. MailboxInfoStale.
                         else if (this.session.utilFindInResponse("MailboxInfoStale", false) > 1)
                         {
-                            this.session["ui-backcolor"] = HTMLColourRed;
-                            this.session["ui-color"] = "black";
+                            if (this.session.hostname.Equals("outlook.office.com") || this.session.hostname.Equals("outlook.office365.com"))
+                            {
+                                this.session["ui-backcolor"] = HTMLColourRed;
+                                this.session["ui-color"] = "black";
 
-                            this.session["X-SessionType"] = "!MailboxInfoStale!";
+                                this.session["X-SessionType"] = "!MailboxInfoStale!";
 
-                            this.session["X-ResponseAlert"] = "!HTTP 503 Service Unavailable! MailboxInfoStale";
-                            this.session["X-ResponseComments"] = "MailboxInfoStale found in the response. Raise a support case to Microsft to update the mailbox location, or attempt to fix with " +
-                                "the New-MoveRequest cmdlet for the mailbox in question.";
-                            // Stop right here, do not perform any overrides.
-                            // If we got here, this is the most important aspect on this session.
-                            return;
+                                this.session["X-ResponseAlert"] = "!HTTP 503 Service Unavailable! MailboxInfoStale";
+                                this.session["X-ResponseComments"] = "MailboxInfoStale found in the response. If you are investigating a mailbox search issue, initiate a mailbox move with the " +
+                                    "New-MoveRequest cmdlet. Otherwise raise a support case to Microsft to investigate.";
+                                // Stop right here, do not perform any overrides.
+                                // If we got here, this is the most important aspect on this session.
+                                return;
+                            }
                         }
 
                         /////////////////////////////
