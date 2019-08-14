@@ -1173,7 +1173,7 @@ namespace EXOFiddlerInspector
                                 "This has been seen where users have MFA enabled/enforced, but Modern Authentication is not enabled in the Office 365 service being connected to" +
                                 Environment.NewLine +
                                 Environment.NewLine +
-                                "See https://support.office.com/en-us/article/Enable-or-disable-modern-authentication-in-Exchange-Online-58018196-f918-49cd-8238-56f57f38d662" +
+                                "See https://aka.ms/exomodernauth or http://aka.ms/SkypeModernAuth or" +
                                 Environment.NewLine +
                                 Environment.NewLine +
                                 "https://social.technet.microsoft.com/wiki/contents/articles/36101.office-365-enable-modern-authentication.aspx";
@@ -1206,7 +1206,7 @@ namespace EXOFiddlerInspector
                                 "This has been seen where users have MFA enabled/enforced, but Modern Authentication is not enabled in the Office 365 service being connected to" +
                                 Environment.NewLine +
                                 Environment.NewLine +
-                                "See https://support.office.com/en-us/article/Enable-or-disable-modern-authentication-in-Exchange-Online-58018196-f918-49cd-8238-56f57f38d662" +
+                                "See https://aka.ms/exomodernauth or http://aka.ms/SkypeModernAuth or" +
                                 Environment.NewLine +
                                 Environment.NewLine +
                                 "https://social.technet.microsoft.com/wiki/contents/articles/36101.office-365-enable-modern-authentication.aspx";
@@ -1220,10 +1220,38 @@ namespace EXOFiddlerInspector
                             break;
                         }
 
+                        PreMFAKeyWord = SearchSessionForWord(this.session, "AppPasswordRequired");
+                        if (PreMFAKeyWord > 0)
+                        {
+                            this.session["ui-backcolor"] = HTMLColourRed;
+                            this.session["ui-color"] = "black";
+                            this.session["X-SessionType"] = "!Multi-Factor Auth!";
+
+                            this.session["X-ResponseAlert"] = "HTTP 456 Multi-Factor Authentication: AppPasswordRequired";
+                            this.session["X-ResponseComments"] = "HTTP 456: See details on Raw tab. Look for the presence of 'AppPasswordRequired'." +
+                                Environment.NewLine +
+                                Environment.NewLine +
+                                "This has been seen where users have MFA enabled/enforced, but Modern Authentication is not enabled in the Office 365 service being connected to" +
+                                Environment.NewLine +
+                                Environment.NewLine +
+                                "See https://aka.ms/exomodernauth or http://aka.ms/SkypeModernAuth or" +
+                                Environment.NewLine +
+                                Environment.NewLine +
+                                "https://social.technet.microsoft.com/wiki/contents/articles/36101.office-365-enable-modern-authentication.aspx";
+
+                            // Increment SkipFurtherProcess for SetSessionType function and return.
+                            SkipFurtherProcessing++;
+
+                            FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.2; {this.session["X-ResponseAlert"]}");
+
+                            // break out if this this is the result.
+                            break;
+                        }
+
                         /////////////////////////////
                         //
                         // HTTP 456.99
-                        
+
                         // Any other MFA related session.
                         this.session["ui-backcolor"] = HTMLColourOrange;
                         this.session["ui-color"] = "black";
