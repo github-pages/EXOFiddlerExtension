@@ -644,9 +644,46 @@ namespace EXOFiddlerInspector
                             }
                         }
 
+
                         /////////////////////////////
                         //
-                        // 200.7. SAML Token Parser.
+                        // 200.7. EWS Impersonation.
+                        //
+                        if ((this.session.HostnameIs("outlook.office365.com") && this.session.uriContains("ews/exchange.asmx") && (this.session.utilFindInRequest("ExchangeImpersonation", false) > 1)))
+                        {
+
+                            this.session["ui-backcolor"] = HTMLColourGreen;
+                            this.session["ui-color"] = "black";
+                            this.session["X-SessionType"] = "EXO EWS Impersonation";
+                            this.session["X-ResponseAlert"] = "EXO EWS Impersonation";
+
+                            if (this.session.RequestHeaders.Exists("X-AnchorMailbox"))
+                            {
+                                this.session["X-ResponseComments"] += Environment.NewLine + Environment.NewLine +
+                                    "X-AnchorMailbox request header detected. This is an established best practice which is being followed on the session." +
+                                    Environment.NewLine +
+                                    "For more information on this see the 'Always set X-AnchorMailbox when using EWS Impersonation' section in:" +
+                                    Environment.NewLine + Environment.NewLine +
+                                    "https://blogs.msdn.microsoft.com/webdav_101/2015/05/11/best-practices-ews-authentication-and-access-issues/";
+                            }
+                            else
+                            {
+                                this.session["ui-backcolor"] = HTMLColourRed;
+                                this.session["ui-color"] = "black";
+                                this.session["X-SessionType"] = "EXO EWS";
+                                this.session["X-ResponseAlert"] = "!X-AnchorMailbox Header Missing!";
+
+                                this.session["X-ResponseComments"] += Environment.NewLine + Environment.NewLine +
+                                    "X-AnchorMailbox request header NOT detected. EWS Application should be setting this header per the 'Always set X-AnchorMailbox when using EWS Impersonation' section in:" +
+                                    Environment.NewLine + Environment.NewLine +
+                                    "https://blogs.msdn.microsoft.com/webdav_101/2015/05/11/best-practices-ews-authentication-and-access-issues/";
+                            }
+                            break;
+                        }
+
+                        /////////////////////////////
+                        //
+                        // 200.8. SAML Token Parser.
                         //
                         if (this.session.utilFindInResponse("Issuer=", false) > 1 &&
                             this.session.utilFindInResponse("Attribute AttributeName=", false) > 1 &&
@@ -1045,13 +1082,29 @@ namespace EXOFiddlerInspector
                             this.session["X-SessionType"] = "!HTTP 403 Forbidden!";
 
                             // 3rd-party EWS application could not connect to Exchange Online mailbox until culture/language was set for the first time in OWA.
-                            if (this.session.fullUrl.Contains("outlook.office365.com/EWS") || this.session.fullUrl.Contains("outlook.office365.com/ews"))
+                            if ((this.session.HostnameIs("outlook.office365.com") && this.session.uriContains("ews/exchange.asmx") && (this.session.utilFindInRequest("ExchangeImpersonation", false) > 1)))
                             {
                                 this.session["X-ResponseComments"] += Environment.NewLine + Environment.NewLine +
                                     "EWS Scenario: If you are troubleshooting a 3rd party EWS application (using application impersonation) and the service account mailbox " +
                                     "has been recently migrated into the cloud, ensure mailbox is licensed and to log into the service account mailbox for the first time using OWA at " +
                                     "https://outlook.office365.com to set the mailbox culture." + Environment.NewLine +
                                     "Validate with: Get-Mailbox service-account@domain.com | FL Languages";
+
+                                if (this.session.RequestHeaders.Exists("X-AnchorMailbox"))
+                                {
+                                    this.session["X-ResponseComments"] += Environment.NewLine + Environment.NewLine +
+                                        "X-AnchorMailbox request header detected. This is an established best practice which is being followed on the session." +
+                                        Environment.NewLine +
+                                        "For more information on this see the 'Always set X-AnchorMailbox when using EWS Impersonation' section in:" +
+                                        Environment.NewLine + Environment.NewLine +
+                                        "https://blogs.msdn.microsoft.com/webdav_101/2015/05/11/best-practices-ews-authentication-and-access-issues/";
+                                } else
+                                {
+                                    this.session["X-ResponseComments"] += Environment.NewLine + Environment.NewLine +
+                                        "X-AnchorMailbox request header NOT detected. EWS Application should be setting this header per the 'Always set X-AnchorMailbox when using EWS Impersonation' section in:" +
+                                        Environment.NewLine + Environment.NewLine +
+                                        "https://blogs.msdn.microsoft.com/webdav_101/2015/05/11/best-practices-ews-authentication-and-access-issues/";
+                                }
                             }
 
                             FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}.99; {this.session["X-ResponseAlert"]}");
@@ -1288,6 +1341,7 @@ namespace EXOFiddlerInspector
                         // Pick up any 500 Internal Server Error and write data into the comments box.
                         // Specific scenario on Outlook and Office 365 invalid DNS lookup.
                         // < Discuss and confirm thinking here, validate with a working trace. Is this a true false positive? Highlight in green? >
+
                         this.session["ui-backcolor"] = HTMLColourRed;
                         this.session["ui-color"] = "black";
                         this.session["X-SessionType"] = "Internal Server Error";
@@ -1295,7 +1349,50 @@ namespace EXOFiddlerInspector
                         this.session["X-ResponseAlert"] = "!HTTP 500 Internal Server Error!";
                         this.session["X-ResponseComments"] = "HTTP 500 Internal Server Error";
 
+                        if ((this.session.HostnameIs("outlook.office365.com") && this.session.uriContains("ews/exchange.asmx") && (this.session.utilFindInRequest("ExchangeImpersonation", false) > 1)))
+                        {
+                            if (this.session.utilFindInResponse("ErrorImpersonateUserDenied", false) > 1) {
+                                this.session["ui-backcolor"] = HTMLColourRed;
+                                this.session["ui-color"] = "black";
+                                this.session["X-SessionType"] = "!EWS Impersonation!";
+
+                                this.session["X-ResponseAlert"] = "!HTTP 500 Internal Server Error!";
+                                this.session["X-ResponseComments"] = "Impersonation 'Access Denied' Error" +
+                                    Environment.NewLine + Environment.NewLine +
+                                    "EWS Scenario: If you are troubleshooting a 3rd party EWS application (using application impersonation) and the service account mailbox " +
+                                    "has been recently migrated into the cloud, ensure mailbox is licensed and to log into the service account mailbox for the first time using OWA at " +
+                                    "https://outlook.office365.com to set the mailbox culture." + 
+                                    Environment.NewLine + Environment.NewLine +
+                                    "Validate with: Get-Mailbox service-account@domain.com | FL Languages" +
+                                    Environment.NewLine + Environment.NewLine +
+                                    "An empty Languages field means the mailbox culture has not been set.";
+                            }
+                            SkipFurtherProcessing++;
+                        }
+
+                        if ((this.session.HostnameIs("outlook.office365.com") && this.session.uriContains("ews/exchange.asmx")))
+                        {
+                            if (this.session.RequestHeaders.Exists("X-AnchorMailbox"))
+                            {
+                                this.session["X-ResponseComments"] += Environment.NewLine + Environment.NewLine +
+                                    "X-AnchorMailbox request header detected. This is an established best practice which is being followed on the session." +
+                                    Environment.NewLine +
+                                    "For more information on this see the 'Always set X-AnchorMailbox when using EWS Impersonation' section in:" +
+                                    Environment.NewLine + Environment.NewLine +
+                                    "https://blogs.msdn.microsoft.com/webdav_101/2015/05/11/best-practices-ews-authentication-and-access-issues/";
+                            }
+                            else
+                            {
+                                this.session["X-ResponseComments"] += Environment.NewLine + Environment.NewLine +
+                                    "X-AnchorMailbox request header NOT detected. EWS Application should be setting this header per the 'Always set X-AnchorMailbox when using EWS Impersonation' section in:" +
+                                    Environment.NewLine + Environment.NewLine +
+                                    "https://blogs.msdn.microsoft.com/webdav_101/2015/05/11/best-practices-ews-authentication-and-access-issues/";
+                                SkipFurtherProcessing++;
+                            }
+                        }
+
                         FiddlerApplication.Log.LogString($"O365FiddlerExtension: {this.session.id}; HTTP {this.session.responseCode}; {this.session["X-ResponseAlert"]}");
+
                         //
                         /////////////////////////////
                         break;
